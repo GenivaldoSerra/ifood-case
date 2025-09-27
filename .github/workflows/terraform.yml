@@ -6,6 +6,9 @@ on:
       environment:
         type: string
         required: true
+      aws-assume-role-arn:
+        type: string
+        required: true
       aws-region:
         type: string
         required: true
@@ -33,7 +36,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::548830423088:oidc-provider/token.actions.githubusercontent.com
+          role-to-assume: ${{ inputs.aws-assume-role-arn }}
           role-session-name: NycTripRecordOidcRole
           aws-region: ${{ inputs.aws-region }}
 

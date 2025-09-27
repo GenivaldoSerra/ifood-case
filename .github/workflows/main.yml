@@ -25,4 +25,5 @@ jobs:
     uses: ./.github/workflows/terraform.yml
     with: 
       environment: ${{ github.event.inputs.environment || 'dev' }}
+      aws-assume-role-arn: ${{ vars.NYC_TRIP_RECORD_OIDC_ROLE_ARN }}
       aws-region: ${{ vars.NYC_TRIP_RECORD_AWS_REGION }}
