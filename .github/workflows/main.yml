@@ -29,4 +29,3 @@ jobs:
     with: 
       environment: ${{ env.SETUP_ENV }}
       aws-region: ${{ vars.NYC_TRIP_RECORD_AWS_REGION }}
-      aws-assume-role-arn: ${{ secrets.NYC_TRIP_RECORD_OIDC_ARN }}

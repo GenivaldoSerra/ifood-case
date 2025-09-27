@@ -9,21 +9,15 @@ on:
       aws-region:
         type: string
         required: true
-      aws-assume-role-arn:
-        type: string
-        required: true
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
     environment: ${{ inputs.environment }}
-    defaults:
-      run:
-        shell: bash
 
     steps:
       - name: Test inputs
         run: |
           echo environment: ${{ inputs.environment }}
           echo aws-region: ${{ inputs.aws-region }}
-          echo aws-assume-role-arn: ${{ inputs.aws-assume-role-arn }}
+          echo aws-assume-role-arn: ${{ secrets.NYC_TRIP_RECORD_OIDC_ARN }}
