@@ -49,6 +49,7 @@ runs:
           -target=aws_s3_bucket.bucket \
           -var-file="./envs/${{ inputs.environment }}/terraform.tfvars" \
           -auto-approve
+      shell: bash
 
     - name: Terraform Plan
       id: terraform-plan
