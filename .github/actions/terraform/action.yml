@@ -40,17 +40,6 @@ runs:
         cd devops/terraform && terraform validate
       shell: bash
 
-    - name: Terraform Destroy
-      if: ${{ inputs.environment == 'dev' }}
-      run: |
-        cd devops/terraform
-        terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
-        terraform destroy \
-          -target=aws_s3_bucket.bucket \
-          -var-file="./envs/${{ inputs.environment }}/terraform.tfvars" \
-          -auto-approve
-      shell: bash
-
     - name: Terraform Plan
       id: terraform-plan
       run: |
