@@ -50,7 +50,9 @@ jobs:
         run: cd devops/terraform && terraform init
 
       - name: Terraform Validate
-        run: cd devops/terraform && terraform validate
+        run: | 
+          cd devops/terraform && terraform validate
+          -var="region=${{ inputs.aws-region }}"
 
       - name: Terraform Destroy
         if: steps.read-destroy-config.outputs.destroy == 'true'
