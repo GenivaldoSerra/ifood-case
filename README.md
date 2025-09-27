@@ -17,17 +17,23 @@
       * Informar url do repositório que foi feito o fork, na criação da função (role) do OIDC, conforme a referência acima
       * Colocar tags desse projeto;
       * Especificar branch do repositório que foi feito o fork, na criação da função (role) do OIDC, conforme a referência acima
-  * Adicionar `ARN` do Identity Provider criado, na Environment Secrets do repositório criado
+  * Adicionar `ARN` do Identity Provider criado nas variáveis do repositório criado
     * No seu repositório acesse:
-      * Aba `Settings` > Na seção `Environments`, clique em `New environment` > Crie um environment com o nome `dev` > Na sequência, clique em `Add environment secret` > Crie uma secret com o nome `NYC_TRIP_RECORD_OIDC_ARN`, com o valor do ARN do Identity Provider criado
+      * Aba `Settings` 
+      * Na seção `Security`, clique em `Secrets and variables` 
+      *Clique em `Actions` 
+      * Na sequência, clique na aba `Variables` 
+      * Crie uma variável com o nome `NYC_TRIP_RECORD_OIDC_ARN`, com o valor do ARN do Identity Provider criado
+      * Crie uma variável com o nome `NYC_TRIP_RECORD_AWS_REGION` com o valor us-east-2
+    * **IMPORTANTE:** os nomes acima e a criação dessas variáveis é necessário para deploy do S3 que utiliza essas configurações
+
 * Configurar conexão AWS<>Databricks Free Edition 
-  * How to: (sumário)
-  * Obter o `workspace_id` do Databricks:
-    * Na url após seu login na Free Edition, o id do workspace é o valor após o parâmetro `o=`. Exemplo:
-      * **url:** https://dbc-ec2dba61-89cc.cloud.databricks.com/?o=2345678
-      * **workspace_id:** 2345678
-  * Criar Instance Profile:
-    * Na AWS:
+  * Limitações (para ADR): Instance profile precisa de databricks provisionado na AWS: https://docs.databricks.com/aws/pt/connect/storage/tutorial-s3-instance-profile
+  * Storage credential e external location tem restrições tambem. Criação delas foi feita com sucesso através do AWS Quickstart (que utiliza CloudFormation)
+  * Opção: criar access_key e access_secret_key e colocar como secret no Databricks
+
+
+
       * Procure por `IAM` e abra o menu
       * No menu IAM, busque por `Identity Providers (ou Provedores de Identidade)`
       * No menu de Identity Providers, clique em `Adicionar provedor`

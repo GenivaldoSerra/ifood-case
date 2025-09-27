@@ -1,0 +1,59 @@
+name: "Databricks Setup (Secrets + Jobs)"
+
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment do deploy'
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+        default: 'dev'
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  databricks-setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # AWS OIDC authentication
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ vars.NYC_TRIP_RECORD_OIDC_ROLE_ARN }}
+          role-session-name: NycTripRecordOidcRole
+          aws-region: ${{ vars.NYC_TRIP_RECORD_AWS_REGION }}
+
+      # Create IAM Access Key
+      - name: Create IAM access key
+        id: create-access-key
+        run: |
+          ACCESS_JSON=$(aws iam create-access-key --user-name nyc-trip-record-databricks)
+          ACCESS_KEY=$(echo $ACCESS_JSON | jq -r '.AccessKey.AccessKeyId')
+          SECRET_KEY=$(echo $ACCESS_JSON | jq -r '.AccessKey.SecretAccessKey')
+          echo "access_key=$ACCESS_KEY" >> $GITHUB_OUTPUT
+          echo "secret_key=$SECRET_KEY" >> $GITHUB_OUTPUT
+
+      # Push secrets to Databricks
+      - name: Create Databricks secrets
+        env:
+          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+        run: |
+          curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/scopes/create" \
+            -H "Authorization: Bearer $DATABRICKS_TOKEN" \
+            -d '{"scope": "nyc-trip-record"}' || echo "Scope may already exist"
+
+          curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
+            -H "Authorization: Bearer $DATABRICKS_TOKEN" \
+            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-access-key\", \"string_value\": \"${{ steps.create-access-key.outputs.access_key }}\"}"
+
+          curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
+            -H "Authorization: Bearer $DATABRICKS_TOKEN" \
+            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-secret-key\", \"string_value\": \"${{ steps.create-access-key.outputs.secret_key }}\"}"
