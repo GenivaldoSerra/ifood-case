@@ -33,7 +33,7 @@ jobs:
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: ${{ secrets.NYC_TRIP_RECORD_OIDC_ARN }}
+          role-to-assume: arn:aws:iam::548830423088:oidc-provider/token.actions.githubusercontent.com
           role-session-name: NycTripRecordOidcRole
           aws-region: ${{ inputs.aws-region }}
 
