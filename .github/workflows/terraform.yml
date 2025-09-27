@@ -1,0 +1,28 @@
+name: "NYC Trip Record S3 Deploy"
+
+on:
+  workflow_call:
+    inputs:
+      environment:
+        type: string
+        required: true
+      aws-region:
+        type: string
+        required: true
+      aws-assume-role-arn:
+        type: string
+        required: true
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+
+    steps:
+      - name: Test inputs
+        run: |
+          echo environment: ${{ inputs.environment }}
+          echo aws-region: ${{ inputs.aws-region }}
+          echo aws-assume-role-arn: ${{ inputs.aws-assume-role-arn }}
