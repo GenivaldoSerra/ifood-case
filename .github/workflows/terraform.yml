@@ -23,7 +23,7 @@ jobs:
         run: |
           echo environment: ${{ inputs.environment }}
           echo aws-region: ${{ inputs.aws-region }}
-          echo aws-assume-role-arn: ${{ secrets.NYC_TRIP_RECORD_OIDC_ARN }}
+          echo aws-assume-role-arn: ${{ inputs.aws-assume-role-arn }}
 
       - name: Checkout
         uses: actions/checkout@v4
