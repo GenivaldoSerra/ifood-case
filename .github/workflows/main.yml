@@ -1,0 +1,28 @@
+name: "NYC Trip Record S3 Setup"
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment do deploy'
+        required: true
+        type: choice
+        options:
+          - dev
+          - prod
+        default: 'dev'
+
+
+permissions:
+  id-token: write
+  contents: read
+
+jobs:
+  terraform:
+    uses: ./.github/workflows/terraform.yml
+    with: 
+      environment: ${{ github.event.inputs.environment || 'dev' }}
+      aws-region: ${{ vars.NYC_TRIP_RECORD_AWS_REGION }}
