@@ -16,13 +16,6 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Test inputs
-      run: |
-        echo environment: ${{ inputs.environment }}
-        echo aws-region: ${{ inputs.aws-region }}
-        echo aws-assume-role-arn: ${{ inputs.aws-assume-role-arn }}
-      shell: bash
-
     - name: Checkout
       uses: actions/checkout@v4
   
