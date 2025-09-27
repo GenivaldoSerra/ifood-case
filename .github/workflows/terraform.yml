@@ -52,7 +52,6 @@ jobs:
       - name: Terraform Validate
         run: | 
           cd devops/terraform && terraform validate
-          -var="region=${{ inputs.aws-region }}"
 
       - name: Terraform Destroy
         if: steps.read-destroy-config.outputs.destroy == 'true'
@@ -70,7 +69,6 @@ jobs:
           cd devops/terraform
           terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
           terraform plan \
-          -var="region=${{ inputs.aws-region }}" \
           -var-file="./envs/${{ inputs.environment }}/terraform.tfvars" \
           -out="${{ inputs.environment }}.plan"
       
