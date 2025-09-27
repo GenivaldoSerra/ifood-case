@@ -10,7 +10,8 @@
   * Criar OIDC (OpenID Connect):
     * Referência [aqui](https://aws.amazon.com/pt/blogs/security/use-iam-roles-to-connect-github-actions-to-actions-in-aws/)
     * Necessário:
-      * Informar nome do seu perfil no Github, na criação da função (role) do OIDC, conforme a referência acima (Step 2);
+      * Informar nome do seu perfil no campo `Github Organization` , na criação da função (role) do OIDC, conforme a referência acima (Step 2);
+      * Coloque `NycTripRecordOidcRole` como nome da role na criação da função (role) do OIDC, conforme a referência acima (Step 2);
       * Selecione a role: `AmazonS3FullAccess` na criação da função (role) do OIDC, conforme a referência acima (Step 2);
     * Recomendado:
       * Informar url do repositório que foi feito o fork, na criação da função (role) do OIDC, conforme a referência acima
