@@ -16,7 +16,8 @@ on:
         default: 'dev'
 
 env:
-  SETUP_ENV: ${{ github.event.inputs.environment }}
+  SETUP_ENV: ${{ github.event.inputs.environment || 'dev' }}
+
 
 permissions:
   id-token: write
@@ -26,6 +27,6 @@ jobs:
   terraform:
     uses: ./.github/workflows/terraform.yml
     with: 
-      environment: env.SETUP_ENV
+      environment: ${{ env.SETUP_ENV }}
       aws-region: ${{ vars.NYC_TRIP_RECORD_AWS_REGION }}
-      aws-assume-role-arn: ${{ env.SETUP_ENV.secrets.NYC_TRIP_RECORD_OIDC_ARN }}
+      aws-assume-role-arn: ${{ secrets.NYC_TRIP_RECORD_OIDC_ARN }}
