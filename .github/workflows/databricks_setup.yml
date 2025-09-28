@@ -3,41 +3,48 @@ name: "Databricks Setup (Secrets + Jobs)"
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Environment do deploy'
+      github_user_email:
+        description: 'Your Github User email to setup confs'
         required: true
-        type: choice
-        options:
-          - dev
-          - prod
-        default: 'dev'
+        type: string
 
 permissions:
   id-token: write
   contents: read
 
+env:
+  AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
 jobs:
   databricks-setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Create Databricks secrets
-        env:
-          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
-          AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      # - name: Create Databricks secrets
+      #   run: |
+      #     echo "Criando scope no Databricks (se não existir)..."
+      #     curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/scopes/create" \
+      #       -H "Authorization: Bearer $DATABRICKS_TOKEN" \
+      #       -d '{"scope": "nyc-trip-record"}' || echo "Scope may already exist"
+
+      #     echo "Criando secret aws-access-key..."
+      #     curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
+      #       -H "Authorization: Bearer $DATABRICKS_TOKEN" \
+      #       -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-access-key\", \"string_value\": \"$AWS_ACCESS_KEY\"}"
+
+      #     echo "Criando secret aws-secret-key..."
+      #     curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
+      #       -H "Authorization: Bearer $DATABRICKS_TOKEN" \
+      #       -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-secret-key\", \"string_value\": \"$AWS_SECRET_KEY\"}"
+        
+      - name: Clone repository
         run: |
-          echo "Criando scope no Databricks (se não existir)..."
-          curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/scopes/create" \
+          echo "Clonando repositório"
+          clone_path="${/Repos/}${{ github.event.inputs.github_user }}${/ifood-case}"
+          email_delimiter="@"
+          url="${https://github.com/}$( echo {{ github.event.inputs.github_user }} | cut -d "$email_delimiter" -f 1)${/ifood-case.git}"
+          curl -s -X POST "$DATABRICKS_HOST/api/2.0/repos" \
             -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d '{"scope": "nyc-trip-record"}' || echo "Scope may already exist"
-
-          echo "Criando secret aws-access-key..."
-          curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
-            -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-access-key\", \"string_value\": \"$AWS_ACCESS_KEY\"}"
-
-          echo "Criando secret aws-secret-key..."
-          curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
-            -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-secret-key\", \"string_value\": \"$AWS_SECRET_KEY\"}"
+            -d "{\"provider\": \"gitHub\", \"key\": \"aws-access-key\", \"string_value\": \"$AWS_ACCESS_KEY\"}"
