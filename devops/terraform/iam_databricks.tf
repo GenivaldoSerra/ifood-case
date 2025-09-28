@@ -1,4 +1,3 @@
-# Usuário para integração com Databricks
 resource "aws_iam_user" "databricks_user" {
   name = "nyc-trip-record-databricks"
 
@@ -8,7 +7,6 @@ resource "aws_iam_user" "databricks_user" {
   }
 }
 
-# Policy de acesso ao bucket S3
 data "aws_iam_policy_document" "databricks_bucket_access" {
   statement {
     actions = [
@@ -35,28 +33,51 @@ resource "aws_iam_user_policy_attachment" "databricks_attach_bucket" {
   policy_arn = aws_iam_policy.databricks_bucket_access.arn
 }
 
-# Referência à role OIDC existente
-data "aws_iam_role" "nyc_trip_record_oidc" {
-  name = "nyc-trip-record-oidc" # ajuste para o nome exato da role no AWS Console
+data "aws_iam_policy_document" "oidc_manage_keys" {
+  statement {
+    actions = [
+      "iam:CreateAccessKey",
+      "iam:DeleteAccessKey",
+      "iam:ListAccessKeys"
+    ]
+    resources = [
+      aws_iam_user.databricks_user.arn
+    ]
+  }
 }
 
-# Policy inline diretamente na role OIDC para gerenciar as keys do usuário Databricks
-resource "aws_iam_role_policy" "oidc_manage_databricks_keys" {
-  name = "nyc-trip-record-oidc-manage-databricks-keys"
-  role = data.aws_iam_role.nyc_trip_record_oidc.id
+resource "aws_iam_policy" "oidc_manage_keys" {
+  name        = "nyc-trip-record-oidc-manage-databricks-keys"
+  description = "Allow OIDC role to manage access keys for Databricks user"
+  policy      = data.aws_iam_policy_document.oidc_manage_keys.json
+}
 
-  policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Effect = "Allow"
-        Action = [
-          "iam:CreateAccessKey",
-          "iam:DeleteAccessKey",
-          "iam:ListAccessKeys"
-        ]
-        Resource = aws_iam_user.databricks_user.arn
-      }
-    ]
-  })
+data "aws_iam_role" "nyc_trip_record_oidc" {
+  name = "nyc-trip-record-oidc"
+}
+
+resource "aws_iam_role_policy_attachment" "oidc_attach_manage_keys" {
+  role       = data.aws_iam_role.nyc_trip_record_oidc.name
+  policy_arn = aws_iam_policy.oidc_manage_keys.arn
+}
+
+resource "aws_s3_bucket" "bucket" {
+  bucket = "nyc-trip-record-ifood"
+
+  tags = {
+    component   = "setup"
+    cost_center = "nyc_trip_record"
+    developer   = "calilisantos@gmail.com"
+    env         = "dev"
+    resource    = "nyc_trip_record_bucket"
+  }
+}
+
+resource "aws_s3_object" "folders" {
+  for_each = toset(["raw/", "refined/", "trusted/"])
+
+  bucket  = aws_s3_bucket.bucket.id
+  key     = each.key
+  content = ""
+  tags = aws_s3_bucket.bucket.tags
 }
