@@ -42,9 +42,14 @@ jobs:
       - name: Clone repository
         run: |
           echo "Clonando repositório"
-          clone_path="${/Repos/}${{ github.event.inputs.github_user }}${/ifood-case}"
+          clone_path="/Repos/${{ github.event.inputs.github_user }}/ifood-case"
           email_delimiter="@"
-          url="${https://github.com/}$( echo {{ github.event.inputs.github_user }} | cut -d "$email_delimiter" -f 1)${/ifood-case.git}"
-          curl -s -X POST "$DATABRICKS_HOST/api/2.0/repos" \
+          github_user=$(echo "${{ github.event.inputs.github_user }}" | cut -d "$email_delimiter" -f 1)
+          url="https://github.com/${github_user_without_domain}/ifood-case.git"
+          
+          response=$(curl -s -X POST "$DATABRICKS_HOST/api/2.0/repos" \
             -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d "{\"provider\": \"gitHub\", \"key\": \"aws-access-key\", \"string_value\": \"$AWS_ACCESS_KEY\"}"
+            -d "{\"provider\": \"gitHub\", \"url\": \"$url\", \"path\": \"$clone_path\"}")
+
+          repo_path=$(echo "$response" | jq -r '.path')
+          echo "Repositório criado no Databricks em: $repo_path"
