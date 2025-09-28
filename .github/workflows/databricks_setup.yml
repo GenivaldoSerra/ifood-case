@@ -30,17 +30,28 @@ jobs:
           role-session-name: NycTripRecordOidcRole
           aws-region: ${{ vars.NYC_TRIP_RECORD_AWS_REGION }}
 
-      # Create IAM Access Key
-      - name: Create IAM access key
-        id: create-access-key
+      # Rotate IAM access key
+      - name: Rotate IAM access key
+        id: rotate-access-key
         run: |
-          ACCESS_JSON=$(aws iam create-access-key --user-name nyc-trip-record-databricks)
+          USER_NAME="nyc-trip-record-databricks"
+
+          echo "Listando access keys existentes..."
+          EXISTING_KEYS=$(aws iam list-access-keys --user-name $USER_NAME | jq -r '.AccessKeyMetadata[].AccessKeyId')
+
+          for KEY in $EXISTING_KEYS; do
+            echo "Deletando access key antiga: $KEY"
+            aws iam delete-access-key --user-name $USER_NAME --access-key-id $KEY
+          done
+
+          echo "Criando nova access key..."
+          ACCESS_JSON=$(aws iam create-access-key --user-name $USER_NAME)
           ACCESS_KEY=$(echo $ACCESS_JSON | jq -r '.AccessKey.AccessKeyId')
           SECRET_KEY=$(echo $ACCESS_JSON | jq -r '.AccessKey.SecretAccessKey')
+
           echo "access_key=$ACCESS_KEY" >> $GITHUB_OUTPUT
           echo "secret_key=$SECRET_KEY" >> $GITHUB_OUTPUT
 
-      # Push secrets to Databricks
       - name: Create Databricks secrets
         env:
           DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
@@ -52,8 +63,8 @@ jobs:
 
           curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
             -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-access-key\", \"string_value\": \"${{ steps.create-access-key.outputs.access_key }}\"}"
+            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-access-key\", \"string_value\": \"${{ steps.rotate-access-key.outputs.access_key }}\"}"
 
           curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
             -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-secret-key\", \"string_value\": \"${{ steps.create-access-key.outputs.secret_key }}\"}"
+            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-secret-key\", \"string_value\": \"${{ steps.rotate-access-key.outputs.secret_key }}\"}"
