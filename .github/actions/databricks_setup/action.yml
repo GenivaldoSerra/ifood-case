@@ -41,16 +41,18 @@ runs:
           -H "Authorization: Bearer ${{ inputs.databricks_token }}" \
           -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-secret-key\", \"string_value\": \"${{ inputs.aws_secret_key }}\"}"
         echo "$(date "+%Y-%m-%d %T") [INFO] Secret aws-secret-key criada com sucesso..."
+      shell: bash
         
     - name: Clone repository
       run: |
         echo "$(date "+%Y-%m-%d %T") [INFO] Clonando repositório"
-        clone_path="/Repos/${{ inputs.databricks_user_email }}/ifood-case"
+        clone_path="/Repos/${{ inputs.databricks_user_email }}/${{ github.event.repository.name }}"
         email_delimiter="@"
-        url="https://github.com/${{ github.actor }}/ifood-case.git"
+        url="https://github.com/${{ github.repository }}.git"
         response=$(curl -s -X POST "${{ inputs.databricks_host }}/api/2.0/repos" \
           -H "Authorization: Bearer ${{ inputs.databricks_token }}" \
           -d "{\"provider\": \"gitHub\", \"url\": \"$url\", \"path\": \"$clone_path\"}")
 
         repo_path=$(echo "$response" | jq -r '.path')
         echo "$(date "+%Y-%m-%d %T") [INFO] Repositório criado no Databricks em: $repo_path"
+      shell: bash
