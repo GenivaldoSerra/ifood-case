@@ -9,10 +9,13 @@ inputs:
     description: "OIDC role to assume"
     required: true
   databricks_host:
-    description: "AWS region"
+    description: "User Databricks Host"
     required: true
   databricks_token:
-    description: "AWS region"
+    description: "User Databricks Token"
+    required: true
+  databricks_user_email:
+    description: "User Databricks Email"
     required: true
 
 
@@ -42,7 +45,7 @@ runs:
   - name: Clone repository
     run: |
       echo "$(date "+%Y-%m-%d %T") [INFO] Clonando repositório"
-      clone_path="/Repos/${{ github.event.inputs.databricks_user_email }}/ifood-case"
+      clone_path="/Repos/${{ inputs.databricks_user_email }}/ifood-case"
       email_delimiter="@"
       url="https://github.com/${{ github.actor }}/ifood-case.git"
       response=$(curl -s -X POST "${{ inputs.databricks_host }}/api/2.0/repos" \
