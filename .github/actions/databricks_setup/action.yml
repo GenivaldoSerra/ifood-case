@@ -41,6 +41,7 @@ runs:
           -H "Authorization: Bearer ${{ inputs.databricks_token }}" \
           -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-secret-key\", \"string_value\": \"${{ inputs.aws_secret_key }}\"}"
         echo "$(date "+%Y-%m-%d %T") [INFO] Secret aws-secret-key criada com sucesso..."
+      shell: bash
         
     - name: Clone repository
       run: |
@@ -54,3 +55,4 @@ runs:
 
         repo_path=$(echo "$response" | jq -r '.path')
         echo "$(date "+%Y-%m-%d %T") [INFO] Repositório criado no Databricks em: $repo_path"
+      shell: bash
