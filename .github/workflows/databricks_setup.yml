@@ -21,6 +21,9 @@ jobs:
   databricks-setup:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+          uses: actions/checkout@v4
+
       - uses: ./.github\actions\databricks_setup
         with: 
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
