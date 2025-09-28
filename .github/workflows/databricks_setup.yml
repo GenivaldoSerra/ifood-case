@@ -46,7 +46,9 @@ jobs:
           email_delimiter="@"
           github_user=$(echo "${{ github.event.inputs.github_user }}" | cut -d "$email_delimiter" -f 1)
           url="https://github.com/${github_user}/ifood-case.git"
-
+          echo github_user $github_user
+          echo url $url
+          echo Databricks_HOST "$DATABRICKS_HOST/api/2.0/repos"
           response=$(curl -s -X POST "$DATABRICKS_HOST/api/2.0/repos" \
             -H "Authorization: Bearer $DATABRICKS_TOKEN" \
             -d "{\"provider\": \"gitHub\", \"url\": \"$url\", \"path\": \"$clone_path\"}")
