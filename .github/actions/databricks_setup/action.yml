@@ -1,0 +1,56 @@
+name: "Databricks Setup"
+description: "Create Secrets and Clone Repo in Databricks Workspace"
+
+inputs:
+  aws_access_key:
+    description: "Deploy environment"
+    required: true
+  aws_secret_key:
+    description: "OIDC role to assume"
+    required: true
+  databricks_host:
+    description: "User Databricks Host"
+    required: true
+  databricks_token:
+    description: "User Databricks Token"
+    required: true
+  databricks_user_email:
+    description: "User Databricks Email"
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+- name: Create Databricks secrets
+    run: |
+      echo "$(date "+%Y-%m-%d %T") [INFO] Criando scope no Databricks (se não existir)..."
+      curl -s -X POST "${{ inputs.databricks_host}}/api/2.0/secrets/scopes/create" \
+        -H "Authorization: Bearer ${{ inputs.databricks_token }}" \
+        -d '{"scope": "nyc-trip-record"}' || echo "$(date "+%Y-%m-%d %T") [WARNING] Scope may already exist"
+      echo "$(date "+%Y-%m-%d %T") [INFO] Scope criado com sucesso..."
+
+      echo "$(date "+%Y-%m-%d %T") [INFO] Criando secret aws-access-key..."
+      curl -s -X POST "${{ inputs.databricks_host}}/api/2.0/secrets/put" \
+        -H "Authorization: Bearer ${{ inputs.databricks_token }}" \
+        -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-access-key\", \"string_value\": \"${{ inputs.aws_access_key}}\"}"
+      echo "$(date "+%Y-%m-%d %T") [INFO] Secret aws-access-key criada com sucesso..."
+
+      echo "$(date "+%Y-%m-%d %T") [INFO] Criando secret aws-secret-key..."
+      curl -s -X POST "${{ inputs.databricks_host }}/api/2.0/secrets/put" \
+        -H "Authorization: Bearer ${{ inputs.databricks_token }}" \
+        -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-secret-key\", \"string_value\": \"${{ inputs.aws_secret_key }}\"}"
+      echo "$(date "+%Y-%m-%d %T") [INFO] Secret aws-secret-key criada com sucesso..."
+    
+  - name: Clone repository
+    run: |
+      echo "$(date "+%Y-%m-%d %T") [INFO] Clonando repositório"
+      clone_path="/Repos/${{ inputs.databricks_user_email }}/ifood-case"
+      email_delimiter="@"
+      url="https://github.com/${{ github.actor }}/ifood-case.git"
+      response=$(curl -s -X POST "${{ inputs.databricks_host }}/api/2.0/repos" \
+        -H "Authorization: Bearer ${{ inputs.databricks_token }}" \
+        -d "{\"provider\": \"gitHub\", \"url\": \"$url\", \"path\": \"$clone_path\"}")
+
+      repo_path=$(echo "$response" | jq -r '.path')
+      echo "$(date "+%Y-%m-%d %T") [INFO] Repositório criado no Databricks em: $repo_path"
