@@ -11,10 +11,6 @@ on:
         description: 'Seu email Databricks (obrigatório)'
         required: true
         type: string
-      github_user:
-        description: 'Seu usuário GitHub (obrigatório)'
-        required: true
-        type: string
 
 permissions:
   id-token: write
@@ -55,7 +51,7 @@ jobs:
           echo "$(date "+%Y-%m-%d %T") [INFO] Clonando repositório"
           clone_path="/Repos/${{ github.event.inputs.databricks_user_email }}/ifood-case"
           email_delimiter="@"
-          url="https://github.com/${{ github.event.inputs.github_user }}/ifood-case.git"
+          url="https://github.com/${{ github.actor }}/ifood-case.git"
           response=$(curl -s -X POST "$DATABRICKS_HOST/api/2.0/repos" \
             -H "Authorization: Bearer $DATABRICKS_TOKEN" \
             -d "{\"provider\": \"gitHub\", \"url\": \"$url\", \"path\": \"$clone_path\"}")
