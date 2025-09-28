@@ -1,3 +1,4 @@
+# Usuário para integração com Databricks
 resource "aws_iam_user" "databricks_user" {
   name = "nyc-trip-record-databricks"
 
@@ -7,6 +8,7 @@ resource "aws_iam_user" "databricks_user" {
   }
 }
 
+# Policy de acesso ao bucket S3
 data "aws_iam_policy_document" "databricks_bucket_access" {
   statement {
     actions = [
@@ -33,26 +35,28 @@ resource "aws_iam_user_policy_attachment" "databricks_attach_bucket" {
   policy_arn = aws_iam_policy.databricks_bucket_access.arn
 }
 
-data "aws_iam_policy_document" "oidc_manage_keys" {
-  statement {
-    actions = [
-      "iam:CreateAccessKey",
-      "iam:DeleteAccessKey",
-      "iam:ListAccessKeys"
-    ]
-    resources = [
-      aws_iam_user.databricks_user.arn
-    ]
-  }
+# Referência à role OIDC existente
+data "aws_iam_role" "nyc_trip_record_oidc" {
+  name = "nyc-trip-record-oidc" # ajuste para o nome exato da role no AWS Console
 }
 
-resource "aws_iam_policy" "oidc_manage_keys" {
-  name        = "nyc-trip-record-oidc-manage-databricks-keys"
-  description = "Allow OIDC role to manage access keys for Databricks user"
-  policy      = data.aws_iam_policy_document.oidc_manage_keys.json
-}
+# Policy inline diretamente na role OIDC para gerenciar as keys do usuário Databricks
+resource "aws_iam_role_policy" "oidc_manage_databricks_keys" {
+  name = "nyc-trip-record-oidc-manage-databricks-keys"
+  role = data.aws_iam_role.nyc_trip_record_oidc.id
 
-resource "aws_iam_role_policy_attachment" "oidc_attach_manage_keys" {
-  role       = aws_iam_role.nyc_trip_record_oidc.name # sua role OIDC já existente
-  policy_arn = aws_iam_policy.oidc_manage_keys.arn
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "iam:CreateAccessKey",
+          "iam:DeleteAccessKey",
+          "iam:ListAccessKeys"
+        ]
+        Resource = aws_iam_user.databricks_user.arn
+      }
+    ]
+  })
 }

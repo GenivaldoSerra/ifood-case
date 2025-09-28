@@ -22,7 +22,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # AWS OIDC authentication
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
         with:
@@ -30,7 +29,6 @@ jobs:
           role-session-name: NycTripRecordOidcRole
           aws-region: ${{ vars.NYC_TRIP_RECORD_AWS_REGION }}
 
-      # Rotate IAM access key
       - name: Rotate IAM access key
         id: rotate-access-key
         run: |
