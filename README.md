@@ -34,12 +34,39 @@
 
 
 
-      * Procure por `IAM` e abra o menu
-      * No menu IAM, busque por `Identity Providers (ou Provedores de Identidade)`
-      * No menu de Identity Providers, clique em `Adicionar provedor`
-      * No menu de Adicionar provedor de identidade especifique:
-        * `OpenID Connect` como Tipo de provedor
-        * informe um nome de provedor
-    * No Databricks:
-      * No seu perfil (ícone superior à direita com a letra inicial do seu nome de perfil), acessar:
-        * Settings > Compute > Botão `Manage` ao lado de SQL warehouses and serverless compute > 
+
+### **Passo 1 – Entrar no IAM**
+
+1. Acesse o console da AWS.
+2. Vá em **IAM → Users**.
+3. Clique no usuário que você quer usar (ex: `nyc-trip-record-databricks`).
+
+   > Se não existir, crie o usuário primeiro:
+   >
+   > * User name: `nyc-trip-record-databricks`
+   > * Access type: **Programmatic access** (necessário para boto3/CLI)
+   > * Não esqueça de adicionar ao menos permissões para o bucket S3 que você vai usar.
+
+
+
+### **Passo 2 – Criar Access Key**
+
+1. Dentro do usuário, clique na aba **Security credentials**.
+2. Role até **Access keys**.
+3. Clique em **Create access key**.
+4. Escolha **Programmatic access** e confirme.
+5. Você verá **Access Key ID** e **Secret Access Key** — **salve em local seguro**, pois o Secret só aparece uma vez.
+
+---
+
+### **Passo 3 – Salvar no GitHub Secrets**
+
+No repositório do GitHub:
+
+1. Vá em **Settings → Secrets and variables → Actions → New repository secret**.
+2. Crie dois secrets:
+
+   * `AWS_ACCESS_KEY_ID` → cole o Access Key ID
+   * `AWS_SECRET_ACCESS_KEY` → cole o Secret Access Key
+
+
