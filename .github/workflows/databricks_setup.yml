@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       github_user_email:
-        description: 'Your Github User email to setup confs'
+        description: 'Your Github User email (required)'
         required: true
         type: string
 
@@ -45,8 +45,8 @@ jobs:
           clone_path="/Repos/${{ github.event.inputs.github_user }}/ifood-case"
           email_delimiter="@"
           github_user=$(echo "${{ github.event.inputs.github_user }}" | cut -d "$email_delimiter" -f 1)
-          url="https://github.com/${github_user_without_domain}/ifood-case.git"
-          
+          url="https://github.com/${github_user}/ifood-case.git"
+
           response=$(curl -s -X POST "$DATABRICKS_HOST/api/2.0/repos" \
             -H "Authorization: Bearer $DATABRICKS_TOKEN" \
             -d "{\"provider\": \"gitHub\", \"url\": \"$url\", \"path\": \"$clone_path\"}")
