@@ -25,7 +25,6 @@
     * databricks_host: Url do Databricks antes do parâmetro "?o=<número_workspace>
       * Ex: url: https://dbc-ab3dba61-89cc.cloud.databricks.com/?o=3912183202474156; databricks_host: https://dbc-ab3dba61-89cc.cloud.databricks.com/
     * databricks_user_email: Seu email utilizado para login no Workspace Databricks
-    * github_user: Seu usário no github (não o email)
   * Workflow NYC Trip Record S3 Setup:
     * environment: Com os valores 'dev' ou 'prod' (a ser implementado)
     * aws_region: Com o valor da região a criar o bucket S3
