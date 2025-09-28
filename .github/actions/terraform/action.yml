@@ -32,17 +32,21 @@ runs:
         aws-region: ${{ inputs.aws-region }}
     
     - name: Terraform Init
-      run: cd devops/terraform && terraform init
+      run: |
+        echo "$(date "+%Y-%m-%d %T") [INFO] Iniciando serviço Terraform"
+        cd devops/terraform && terraform init
       shell: bash
 
     - name: Terraform Validate
       run: | 
+        echo "$(date "+%Y-%m-%d %T") [INFO] Validando módulos Terraform"
         cd devops/terraform && terraform validate
       shell: bash
 
     - name: Terraform Plan
       id: terraform-plan
       run: |
+        echo "$(date "+%Y-%m-%d %T") [INFO] Construindo plano Terraform de deploy"
         cd devops/terraform
         terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
         terraform plan \
@@ -52,7 +56,8 @@ runs:
     
     - name: Terraform Apply
       id: terraform-apply
-      run: | 
+      run: |
+        echo "$(date "+%Y-%m-%d %T") [INFO] Aplicando Deploy em ${{ inputs.environment }}"
         cd devops/terraform
         terraform workspace select ${{ inputs.environment }} || terraform workspace new ${{ inputs.environment }}
         terraform apply "${{ inputs.environment }}.plan"
