@@ -1,19 +1,24 @@
 name: "NYC Trip Record S3 Setup"
 
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment do deploy'
+        description: 'Environment do deploy (obrigatório)'
         required: true
         type: choice
         options:
           - dev
           - prod
         default: 'dev'
+      aws_region:
+        description: 'Região a ser criado o S3 (obrigatório. Veja o README)'
+        required: true
+        type: string
+        options:
+          - dev
+          - prod
+        default: 'us-east-2'
 
 
 permissions:
@@ -31,5 +36,5 @@ jobs:
       - uses: ./.github/actions/terraform
         with: 
           environment: ${{ github.event.inputs.environment || 'dev' }}
-          aws-assume-role-arn: ${{ vars.NYC_TRIP_RECORD_OIDC_ROLE_ARN }}
-          aws-region: ${{ vars.NYC_TRIP_RECORD_AWS_REGION }}
+          aws-assume-role-arn: ${{ secrets.NYC_TRIP_RECORD_OIDC_ROLE_ARN }}
+          aws-region: ${{ github.event.inputs.aws_region || 'us-east-2' }}

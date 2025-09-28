@@ -3,57 +3,62 @@ name: "Databricks Setup (Secrets + Jobs)"
 on:
   workflow_dispatch:
     inputs:
-      environment:
-        description: 'Environment do deploy'
+      databricks_host:
+        description: 'Seu host Databricks (obrigatório. Veja o README)'
         required: true
-        type: choice
-        options:
-          - dev
-          - prod
-        default: 'dev'
+        type: string
+      databricks_user_email:
+        description: 'Seu email Databricks (obrigatório)'
+        required: true
+        type: string
+      github_user:
+        description: 'Seu usuário GitHub (obrigatório)'
+        required: true
+        type: string
 
 permissions:
   id-token: write
   contents: read
 
+env:
+  AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  DATABRICKS_HOST: ${{ github.event.inputs.databricks_host}}
+  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
+
 jobs:
   databricks-setup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      # AWS OIDC authentication
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ vars.NYC_TRIP_RECORD_OIDC_ROLE_ARN }}
-          role-session-name: NycTripRecordOidcRole
-          aws-region: ${{ vars.NYC_TRIP_RECORD_AWS_REGION }}
-
-      # Create IAM Access Key
-      - name: Create IAM access key
-        id: create-access-key
-        run: |
-          ACCESS_JSON=$(aws iam create-access-key --user-name nyc-trip-record-databricks)
-          ACCESS_KEY=$(echo $ACCESS_JSON | jq -r '.AccessKey.AccessKeyId')
-          SECRET_KEY=$(echo $ACCESS_JSON | jq -r '.AccessKey.SecretAccessKey')
-          echo "access_key=$ACCESS_KEY" >> $GITHUB_OUTPUT
-          echo "secret_key=$SECRET_KEY" >> $GITHUB_OUTPUT
-
-      # Push secrets to Databricks
       - name: Create Databricks secrets
-        env:
-          DATABRICKS_HOST: ${{ vars.DATABRICKS_HOST }}
-          DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
         run: |
+          echo "$(date "+%Y-%m-%d %T") [INFO] Criando scope no Databricks (se não existir)..."
           curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/scopes/create" \
             -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d '{"scope": "nyc-trip-record"}' || echo "Scope may already exist"
+            -d '{"scope": "nyc-trip-record"}' || echo "$(date "+%Y-%m-%d %T") [WARNING] Scope may already exist"
+          echo "$(date "+%Y-%m-%d %T") [INFO] Scope criado com sucesso..."
 
+          echo "$(date "+%Y-%m-%d %T") [INFO] Criando secret aws-access-key..."
           curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
             -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-access-key\", \"string_value\": \"${{ steps.create-access-key.outputs.access_key }}\"}"
+            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-access-key\", \"string_value\": \"$AWS_ACCESS_KEY\"}"
+          echo "$(date "+%Y-%m-%d %T") [INFO] Secret aws-access-key criada com sucesso..."
 
+          echo "$(date "+%Y-%m-%d %T") [INFO] Criando secret aws-secret-key..."
           curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
             -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-secret-key\", \"string_value\": \"${{ steps.create-access-key.outputs.secret_key }}\"}"
+            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-secret-key\", \"string_value\": \"$AWS_SECRET_KEY\"}"
+          echo "$(date "+%Y-%m-%d %T") [INFO] Secret aws-secret-key criada com sucesso..."
+        
+      - name: Clone repository
+        run: |
+          echo "$(date "+%Y-%m-%d %T") [INFO] Clonando repositório"
+          clone_path="/Repos/${{ github.event.inputs.databricks_user_email }}/ifood-case"
+          email_delimiter="@"
+          url="https://github.com/${{ github.event.inputs.github_user }}/ifood-case.git"
+          response=$(curl -s -X POST "$DATABRICKS_HOST/api/2.0/repos" \
+            -H "Authorization: Bearer $DATABRICKS_TOKEN" \
+            -d "{\"provider\": \"gitHub\", \"url\": \"$url\", \"path\": \"$clone_path\"}")
+
+          repo_path=$(echo "$response" | jq -r '.path')
+          echo "$(date "+%Y-%m-%d %T") [INFO] Repositório criado no Databricks em: $repo_path"
