@@ -1,4 +1,4 @@
-name: "Databricks Setup (Secrets + Jobs)"
+name: "Databricks Setup"
 
 on:
   workflow_dispatch:
@@ -16,45 +16,14 @@ permissions:
   id-token: write
   contents: read
 
-env:
-  AWS_ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  AWS_SECRET_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  DATABRICKS_HOST: ${{ github.event.inputs.databricks_host}}
-  DATABRICKS_TOKEN: ${{ secrets.DATABRICKS_TOKEN }}
 
 jobs:
   databricks-setup:
     runs-on: ubuntu-latest
     steps:
-      - name: Create Databricks secrets
-        run: |
-          echo "$(date "+%Y-%m-%d %T") [INFO] Criando scope no Databricks (se não existir)..."
-          curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/scopes/create" \
-            -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d '{"scope": "nyc-trip-record"}' || echo "$(date "+%Y-%m-%d %T") [WARNING] Scope may already exist"
-          echo "$(date "+%Y-%m-%d %T") [INFO] Scope criado com sucesso..."
-
-          echo "$(date "+%Y-%m-%d %T") [INFO] Criando secret aws-access-key..."
-          curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
-            -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-access-key\", \"string_value\": \"$AWS_ACCESS_KEY\"}"
-          echo "$(date "+%Y-%m-%d %T") [INFO] Secret aws-access-key criada com sucesso..."
-
-          echo "$(date "+%Y-%m-%d %T") [INFO] Criando secret aws-secret-key..."
-          curl -s -X POST "$DATABRICKS_HOST/api/2.0/secrets/put" \
-            -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d "{\"scope\": \"nyc-trip-record\", \"key\": \"aws-secret-key\", \"string_value\": \"$AWS_SECRET_KEY\"}"
-          echo "$(date "+%Y-%m-%d %T") [INFO] Secret aws-secret-key criada com sucesso..."
-        
-      - name: Clone repository
-        run: |
-          echo "$(date "+%Y-%m-%d %T") [INFO] Clonando repositório"
-          clone_path="/Repos/${{ github.event.inputs.databricks_user_email }}/ifood-case"
-          email_delimiter="@"
-          url="https://github.com/${{ github.actor }}/ifood-case.git"
-          response=$(curl -s -X POST "$DATABRICKS_HOST/api/2.0/repos" \
-            -H "Authorization: Bearer $DATABRICKS_TOKEN" \
-            -d "{\"provider\": \"gitHub\", \"url\": \"$url\", \"path\": \"$clone_path\"}")
-
-          repo_path=$(echo "$response" | jq -r '.path')
-          echo "$(date "+%Y-%m-%d %T") [INFO] Repositório criado no Databricks em: $repo_path"
+      - uses: ./.github\actions\databricks_setup
+        with: 
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          databricks_host: ${{ github.event.inputs.databricks_host}}
+          databricks_token: ${{ secrets.DATABRICKS_TOKEN }}

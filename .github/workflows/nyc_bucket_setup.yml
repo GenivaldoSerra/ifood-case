@@ -27,13 +27,13 @@ permissions:
 
 
 jobs:
-  terraform:
+  nyc-bucket-setup:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - uses: ./.github/actions/terraform
+      - uses: ./.github/actions/nyc_bucket_setup
         with: 
           environment: ${{ github.event.inputs.environment || 'dev' }}
           aws-assume-role-arn: ${{ secrets.NYC_TRIP_RECORD_OIDC_ROLE_ARN }}
