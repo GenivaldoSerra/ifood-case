@@ -1,11 +1,11 @@
 Fazer folders das cores dos carros? OK, não precisa
 
 Validar se estrutura de partições está ok (pasta lerá todos parquets?/ A partição com o mês faz sentido?) OK
-Criar integração com unity IN PROGRESS, FAZER CLOUDFORMATION
-Criar external location IN PROGRESS, FAZER CLOUDFORMATION
-Criar catálogo ToDo, DEPENDE DE CLOUDFORMATION. VER README
-Criar schemas ToDo, DEPENDE DE CLOUDFORMATION. VER README
-Criar tabelas externas ToDo, DEPENDE DE CLOUDFORMATION. VER README
+Criar integração com unity IN PROGRESS, FAZER CLOUDFORMATION OK
+Criar external location IN PROGRESS, FAZER CLOUDFORMATION OK
+Criar catálogo ToDo, DEPENDE DE CLOUDFORMATION. VER README OK
+Criar schemas ToDo, DEPENDE DE CLOUDFORMATION. VER README OK
+Criar tabelas externas ToDo, DEPENDE DE CLOUDFORMATION. VER README OK
 
 Ingestão:
 Criar job de ingestão manualmente OK
