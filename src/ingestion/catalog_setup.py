@@ -1,6 +1,16 @@
 # Databricks notebook source
+# MAGIC %md
+# MAGIC # Creating catalog
+
+# COMMAND ----------
+
 # MAGIC %sql
 # MAGIC CREATE CATALOG IF NOT EXISTS nyc_trip_record
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC # Creating schemas
 
 # COMMAND ----------
 
@@ -9,6 +19,11 @@
 # MAGIC CREATE SCHEMA IF NOT EXISTS nyc_trip_record.refined;
 # MAGIC CREATE SCHEMA IF NOT EXISTS nyc_trip_record.trusted;
 # MAGIC
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC # Creating raw tables
 
 # COMMAND ----------
 
@@ -127,6 +142,11 @@
 
 # COMMAND ----------
 
+# MAGIC %md
+# MAGIC # Creating refined tables
+
+# COMMAND ----------
+
 # MAGIC %sql 
 # MAGIC CREATE TABLE IF NOT EXISTS nyc_trip_record.refined.yellow_taxi
 # MAGIC (
@@ -166,3 +186,51 @@
 # MAGIC CREATE TABLE IF NOT EXISTS nyc_trip_record.refined.fhvhv
 # MAGIC USING DELTA
 # MAGIC LOCATION 's3://nyc-trip-record-ifood/refined/fhvhv/'
+
+# COMMAND ----------
+
+# MAGIC %md
+# MAGIC # Creating trusted tables
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC CREATE TABLE IF NOT EXISTS nyc_trip_record.trusted.dim_vendor
+# MAGIC (
+# MAGIC   vendor_id STRING,
+# MAGIC   vendor_code BIGINT,
+# MAGIC   vendor_name STRING,
+# MAGIC   car_type STRING
+# MAGIC )
+# MAGIC USING DELTA
+# MAGIC LOCATION 's3://nyc-trip-record-ifood/trusted/dim_vendor/'
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC CREATE TABLE IF NOT EXISTS nyc_trip_record.trusted.dim_trip_time
+# MAGIC (
+# MAGIC   trip_time_id STRING,
+# MAGIC   pickup_datetime TIMESTAMP,
+# MAGIC   pickup_month INTEGER,
+# MAGIC   pickup_hour INTEGER,
+# MAGIC   dropoff_datetime TIMESTAMP,
+# MAGIC   dropoff_month INTEGER,
+# MAGIC   dropoff_hour INTEGER
+# MAGIC )
+# MAGIC USING DELTA
+# MAGIC LOCATION 's3://nyc-trip-record-ifood/trusted/dim_trip_time/'
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC CREATE TABLE IF NOT EXISTS nyc_trip_record.trusted.fact_trip
+# MAGIC (
+# MAGIC   fact_id STRING,
+# MAGIC   vendor_id STRING,
+# MAGIC   trip_time_id STRING,
+# MAGIC   passenger_count LONG,
+# MAGIC   total_amount DOUBLE
+# MAGIC )
+# MAGIC USING DELTA
+# MAGIC LOCATION 's3://nyc-trip-record-ifood/trusted/fact_trip/'
