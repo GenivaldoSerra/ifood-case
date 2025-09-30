@@ -14,13 +14,11 @@ Versionar job
   Gerar yaml para asset bundle
   Ou json para API
 
-Refined:
+Refined: OK
 Mesma questão de ingestão
 Transformações:
   selecionar colunas necessárias
-  padronizar nomes
   deduplicar
-  criar colunas de partição
 Salvar no bucket refined
 
 Trusted:

@@ -93,3 +93,6 @@ No repositório do GitHub:
 * Configurar ingestão
   * Documentar CloudFormation
   * Execução dos jobs de ingestão
+
+* Decisão:
+  Tirar período Janeiro-2023 da raw, dada inconsistência dos dados

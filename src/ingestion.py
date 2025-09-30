@@ -1,7 +1,6 @@
 # Databricks notebook source
 import boto3
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from databricks.sdk import *
 from itertools import product
 import logging
 import requests
@@ -20,7 +19,6 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-# Configuração do S3
 s3_client = boto3.client(
     "s3",
     aws_access_key_id=dbutils.secrets.get(scope="nyc-trip-record", key="aws-access-key"),
@@ -55,22 +53,22 @@ months_adjusted = [("0"+ str(month)) if month < 10 else str(month) for month in 
 logger.info(f"Baixando arquivos para: {taxi_colors}, {years}, {months_adjusted}")
 
 url_tpl = "https://d37ci6vzurychx.cloudfront.net/trip-data/{TAXI_COLOR}_tripdata_{YEAR}-{MONTH}.parquet"
-key_tpl = "raw/{TAXI_COLOR}/{YEAR}/{MONTH}.parquet"
+key_tpl = "raw/{TAXI_COLOR}/{YEAR}_{MONTH}.parquet"
 
 def download_and_upload(taxi, year, month):
     url = url_tpl.format(TAXI_COLOR=taxi, YEAR=year, MONTH=month)
     key = key_tpl.format(TAXI_COLOR=taxi, YEAR=year, MONTH=month)
-
-    logger.info(f"Baixando: {url}")
-    response = requests.get(url, stream=True)
-    response.raise_for_status()
-    logger.info(f"Salvando em: {key}")
-    s3_client.put_object(
-        Bucket=bucket_name,
-        Key=key,
-        Body=response.content
-    )
-    return key
+    if "2023_01.parquet" not in key:
+        logger.info(f"Baixando: {url}")
+        response = requests.get(url, stream=True)
+        response.raise_for_status()
+        logger.info(f"Salvando em: {key}")
+        s3_client.put_object(
+            Bucket=bucket_name,
+            Key=key,
+            Body=response.content
+        )
+        return key
 
 tasks = list(product(taxi_colors, years, months_adjusted))
 

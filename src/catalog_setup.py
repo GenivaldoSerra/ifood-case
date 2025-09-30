@@ -1,7 +1,6 @@
 # Databricks notebook source
 # MAGIC %sql
 # MAGIC CREATE CATALOG IF NOT EXISTS nyc_trip_record
-# MAGIC -- DROP CATALOG IF EXISTS nyc_trip_catalog CASCADE;
 
 # COMMAND ----------
 
