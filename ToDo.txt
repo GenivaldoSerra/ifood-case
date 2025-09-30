@@ -1,0 +1,40 @@
+Fazer folders das cores dos carros? OK, não precisa
+
+Validar se estrutura de partições está ok (pasta lerá todos parquets?/ A partição com o mês faz sentido?) OK
+Criar integração com unity IN PROGRESS, FAZER CLOUDFORMATION OK
+Criar external location IN PROGRESS, FAZER CLOUDFORMATION OK
+Criar catálogo ToDo, DEPENDE DE CLOUDFORMATION. VER README OK
+Criar schemas ToDo, DEPENDE DE CLOUDFORMATION. VER README OK
+Criar tabelas externas ToDo, DEPENDE DE CLOUDFORMATION. VER README OK
+
+Ingestão:
+Criar job de ingestão manualmente OK
+  Avaliar refatorar para POO
+Versionar job
+  Gerar yaml para asset bundle
+  Ou json para API
+
+Refined: OK
+Mesma questão de ingestão
+Transformações:
+  selecionar colunas necessárias
+  deduplicar
+Salvar no bucket refined
+
+Trusted:
+Mesma questão de ingestão
+Fazer modelagem dimensional
+Avaliar:
+  Ser external
+  Ser managed
+  Ser materialized view
+  Ser view
+
+App Streamlit
+
+Função de comentários com Gen AI
+
+Documentar:
+  C4 Model 
+  ADRs
+    Soluções de Ingestão

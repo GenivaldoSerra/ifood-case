@@ -53,10 +53,7 @@
 * Configurar conexão AWS<>Databricks Free Edition 
   * Limitações (para ADR): Instance profile precisa de databricks provisionado na AWS: https://docs.databricks.com/aws/pt/connect/storage/tutorial-s3-instance-profile
   * Storage credential e external location tem restrições tambem. Criação delas foi feita com sucesso através do AWS Quickstart (que utiliza CloudFormation)
-  * Opção: criar access_key e access_secret_key e colocar como secret no Databricks
-
-
-
+  * Decisão: criar access_key e access_secret_key no Console AWS e colocar em secrets github
 
 ### **Passo 1 – Entrar no IAM**
 
@@ -93,3 +90,9 @@ No repositório do GitHub:
    * `AWS_SECRET_ACCESS_KEY` → cole o Secret Access Key
 
 
+* Configurar ingestão
+  * Documentar CloudFormation
+  * Execução dos jobs de ingestão
+
+* Decisão:
+  Tirar período Janeiro-2023 da raw, dada inconsistência dos dados
