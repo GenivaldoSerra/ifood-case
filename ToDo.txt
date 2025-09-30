@@ -43,3 +43,5 @@ Documentar:
   C4 Model 
   ADRs
     Soluções de Ingestão
+
+Camada staging no deploy do S3?

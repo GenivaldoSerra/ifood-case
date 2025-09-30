@@ -99,3 +99,5 @@ No repositório do GitHub:
 
 * Evoluções:
   * Tabela de parâmetros, tornando ingestões dinâmicas (flag para ingerir ou não)
+  * Testes de integração, unitários
+  * Estratégia SCD 
