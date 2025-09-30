@@ -58,6 +58,7 @@ key_tpl = "raw/{TAXI_COLOR}/{YEAR}_{MONTH}.parquet"
 def download_and_upload(taxi, year, month):
     url = url_tpl.format(TAXI_COLOR=taxi, YEAR=year, MONTH=month)
     key = key_tpl.format(TAXI_COLOR=taxi, YEAR=year, MONTH=month)
+
     if "2023_01.parquet" not in key:
         logger.info(f"Baixando: {url}")
         response = requests.get(url, stream=True)

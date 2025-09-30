@@ -96,3 +96,8 @@ No repositório do GitHub:
 
 * Decisão:
   Tirar período Janeiro-2023 da raw, dada inconsistência dos dados
+
+* Evoluções:
+  * Tabela de parâmetros, tornando ingestões dinâmicas (flag para ingerir ou não)
+  * Testes de integração, unitários
+  * Estratégia SCD 

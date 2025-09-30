@@ -124,3 +124,45 @@
 # MAGIC USING PARQUET
 # MAGIC LOCATION 's3://nyc-trip-record-ifood/raw/fhvhv/'
 # MAGIC COMMENT "High Volume For Hire Vehicles records"
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC CREATE TABLE IF NOT EXISTS nyc_trip_record.refined.yellow_taxi
+# MAGIC (
+# MAGIC   VendorID BIGINT,
+# MAGIC   passenger_count BIGINT,
+# MAGIC   total_amount DOUBLE,
+# MAGIC   tpep_pickup_datetime TIMESTAMP,
+# MAGIC   tpep_dropoff_datetime TIMESTAMP
+# MAGIC )
+# MAGIC USING DELTA
+# MAGIC LOCATION 's3://nyc-trip-record-ifood/refined/yellow/'
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC CREATE TABLE IF NOT EXISTS nyc_trip_record.refined.green_taxi
+# MAGIC (
+# MAGIC   VendorID BIGINT,
+# MAGIC   passenger_count BIGINT,
+# MAGIC   total_amount DOUBLE,
+# MAGIC   lpep_pickup_datetime TIMESTAMP,
+# MAGIC   lpep_dropoff_datetime TIMESTAMP
+# MAGIC )
+# MAGIC USING DELTA
+# MAGIC LOCATION 's3://nyc-trip-record-ifood/refined/green/'
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC CREATE TABLE IF NOT EXISTS nyc_trip_record.refined.fhv
+# MAGIC USING DELTA
+# MAGIC LOCATION 's3://nyc-trip-record-ifood/refined/fhv/'
+
+# COMMAND ----------
+
+# MAGIC %sql 
+# MAGIC CREATE TABLE IF NOT EXISTS nyc_trip_record.refined.fhvhv
+# MAGIC USING DELTA
+# MAGIC LOCATION 's3://nyc-trip-record-ifood/refined/fhvhv/'
