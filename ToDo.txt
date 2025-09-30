@@ -10,9 +10,6 @@ Criar tabelas externas ToDo, DEPENDE DE CLOUDFORMATION. VER README OK
 Ingestão:
 Criar job de ingestão manualmente OK
   Avaliar refatorar para POO
-Versionar job
-  Gerar yaml para asset bundle
-  Ou json para API
 
 Refined: 
 Mesma questão de ingestão
@@ -33,6 +30,10 @@ Avaliar:
   Ser managed
   Ser materialized view
   Ser view
+
+Versionar jobs
+  Gerar yaml para asset bundle
+  Ou json para API
 
 App Streamlit
 
