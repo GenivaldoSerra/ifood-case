@@ -48,11 +48,27 @@ Aqui você vai encontrar os detalhes de como está estruturado e foi desenvolvid
   * **[ingestion](src\ingestion)** com os códigos fonte do job de ingestão dos dados do TLC para a camada bruta (raw) de processamento;
   * **[transform](src\transform)** com os códigos fonte do job de transformações dos dados brutos e pouso nas camadas de consumo dos times de análise (refined e trusted);
 
+  ---
+
 <strong><a id='tecnologias'>[Tecnologias utilizadas](#topicos)</a></strong>
+
+  O projeto foi desenvolvido utilizando o AWS S3 como solução de armazenamento dos dados, e o Databricks Free Edition como solução para aquisição, processamento e consumo (serving) no ambiente analítico.
+
+  Para provisionamento do código, o `Github Actions` foi a solução utilizada para entrega e integração contínua da infraestrutura e desenvolvimento do ambiente. E o `Terraform` foi a opção empregada para versionamento e deploy da infraestrutura integral do S3.
+
+  Ainda sobre o processamento dos dados, o `Python` foi utilizado como API principal, e as bibliotecas e engines utilizadas através do Databricks, baseadas no Python, foram as abaixo
+
+  * **[boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/s3.html):** Kit de desenvolvimento (SDK) da AWS que habilita via código ter uma interface programática com os recursos da cloud. Aqui utilizada como solução de aquisição de dados, dada a integração da ferramenta abaixo com processamento dos recursos
+  * **[PySpark](https://spark.apache.org/docs/latest/api/python/index.html):** API em python do `Apache Spark`, que habilita através da linguagem o processamento de dados massivos (Big Data). É também solução primária no Databricks, que opera via Cluster Jobs do Spark toda a carga e recursos de rede utilizados no Databricks.
+
+  ---
 
 # <a id='orientacoes'>[Orientações](#topicos)</a>
 
 <strong><a id='execucao'>[Executando o projeto](#topicos)</a></strong>
+
+
+  ---
 
 # <a id='implementacoes'>[Implementações](#topicos)</a>
 
@@ -70,11 +86,17 @@ Aqui você vai encontrar os detalhes de como está estruturado e foi desenvolvid
 
 <strong><a id='der'>[Modelagem de Dados](#topicos)</a></strong>
 
+
+  ---
+
 # <a id='adr'>[Decisões Arquiteturais](#topicos)</a>
 
 <strong><a id='c4-model'>[Definições de Solução](#topicos)</a></strong>
 
 <strong><a id='registros'>[Registros de Decisão](#topicos)</a></strong>
+
+
+  ---
 
 # <a id='next'>[Próximos passos](#topicos)</a>
 
