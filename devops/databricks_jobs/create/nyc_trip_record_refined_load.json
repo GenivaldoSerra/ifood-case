@@ -1,0 +1,61 @@
+{
+    "name": "nyc_trip_record_refined_load",
+    "description": "* Load to nyc_trip_record/refined layer\n",
+    "email_notifications": {
+      "no_alert_for_skipped_runs": false
+    },
+    "webhook_notifications": {},
+    "timeout_seconds": 0,
+    "max_concurrent_runs": 1,
+    "tasks": [
+      {
+        "task_key": "green_refined_load",
+        "run_if": "ALL_SUCCESS",
+        "notebook_task": {
+          "notebook_path": "src/transform/green_refined",
+          "source": "GIT"
+        },
+        "max_retries": 0,
+        "min_retry_interval_millis": 900000,
+        "retry_on_timeout": false,
+        "disable_auto_optimization": true,
+        "timeout_seconds": 0,
+        "email_notifications": {},
+        "webhook_notifications": {}
+      },
+      {
+        "task_key": "yellow_refined_load",
+        "run_if": "ALL_SUCCESS",
+        "notebook_task": {
+          "notebook_path": "src/transform/yellow_refined",
+          "source": "GIT"
+        },
+        "max_retries": 0,
+        "min_retry_interval_millis": 900000,
+        "retry_on_timeout": false,
+        "disable_auto_optimization": true,
+        "timeout_seconds": 0,
+        "email_notifications": {},
+        "webhook_notifications": {}
+      }
+    ],
+    "git_source": {
+      "git_url": "https://github.com/calilisantos/ifood-case",
+      "git_provider": "gitHub",
+      "git_branch": "main"
+    },
+    "tags": {
+      "component": "data_integration",
+      "cost_center": "nyc_trip_record",
+      "developer": "calilisantos@gmail.com",
+      "env": "dev",
+      "resource": "nyc_trip_record_refined_load_job"
+    },
+    "queue": {
+      "enabled": true
+    },
+    "performance_target": "PERFORMANCE_OPTIMIZED",
+    "run_as": {
+      "user_name": "calilisantos@gmail.com"
+    }
+}

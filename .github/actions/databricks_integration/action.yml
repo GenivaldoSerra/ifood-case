@@ -1,4 +1,4 @@
-name: "Databricks Setup"
+name: "Databricks Integration"
 description: "Create Secrets and Clone Repo in Databricks Workspace"
 
 inputs:

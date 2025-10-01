@@ -35,8 +35,6 @@ Versionar jobs
   Gerar yaml para asset bundle
   Ou json para API
 
-App Streamlit
-
 Função de comentários com Gen AI
 
 Documentar:

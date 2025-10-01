@@ -24,10 +24,16 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - uses: ./.github/actions/databricks_setup
+      - uses: ./.github/actions/databricks_integration
         with: 
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          databricks_host: ${{ github.event.inputs.databricks_host}}
+          databricks_token: ${{ secrets.DATABRICKS_TOKEN }}
+          databricks_user_email: ${{ github.event.inputs.databricks_user_email}}
+
+      - uses: ./.github/actions/databricks_jobs
+        with:
           databricks_host: ${{ github.event.inputs.databricks_host}}
           databricks_token: ${{ secrets.DATABRICKS_TOKEN }}
           databricks_user_email: ${{ github.event.inputs.databricks_user_email}}
