@@ -38,7 +38,15 @@ Aqui você vai encontrar os detalhes de como está estruturado e foi desenvolvid
 
 * **Na pasta [.github](.github) estão os diretórios:**
   * **[actions](.github\actions)** com custom actions do `GitHub Actions`, modularizando e desaclopando steps dos workflows de subida dos componentes da arquitetura de referência;
-  * **[workflows](.github\workflows)** com os arquivos de origem dos dados mascarados do controle de cheques atual.
+  * **[workflows](.github\workflows)** com os workflows `GitHub Actions` que iniciam o setup das duas soluções adotadas para construção do datalake para o projeto:
+    * **[databricks_setup](.github\workflows\databricks_setup.yml)** que adiciona as secrets, esse repositório e cria no ambiente Databricks informado, os jobs de ingestão e transformação de dados da TLC;
+    * **[nyc_bucket_setup](.github\workflows\nyc_bucket_setup.yml)** que cria um bucket S3 no console AWS informado, para storage do datalake pavimentado pelo Databricks;
+* **Na pasta [analysis](analysis) estão os arquivos que endereçam questões de negócio sobre os dados do TLC NYC**;
+* **Na pasta [devops](devops) estão os módulos utilizados pelos workflows `GitHub Actions`** para pavimentação do Databricks e S3 (baseado em Terraform);
+* **Na pasta [src](src) estão os diretórios:**
+  * **[dataops](src\dataops)** com os códigos fonte utilizados para as operações do ambiente analítico, atualmente no processamento de dados específicos da origem que não puderam seguir o fluxo normal. Mais sobre o tema [aqui](#registros);
+  * **[ingestion](src\ingestion)** com os códigos fonte do job de ingestão dos dados do TLC para a camada bruta (raw) de processamento;
+  * **[transform](src\transform)** com os códigos fonte do job de transformações dos dados brutos e pouso nas camadas de consumo dos times de análise (refined e trusted);
 
 <strong><a id='tecnologias'>[Tecnologias utilizadas](#topicos)</a></strong>
 
