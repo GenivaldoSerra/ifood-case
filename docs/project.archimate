@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<archimate:model xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:archimate="http://www.archimatetool.com/archimate" name="(new model)" id="id-408c7818bb3348d28079232624e87426" version="5.0.0">
+  <folder name="Strategy" id="id-c9037bdbc4e34f609ad6a0a52499cb36" type="strategy"/>
+  <folder name="Business" id="id-5757aab2613b46b7ae7b27ced4d4daa9" type="business"/>
+  <folder name="Application" id="id-022fb529db594767a1a744da97b38d66" type="application">
+    <folder name="Main Draft" id="id-61f517c1e7574e288e5406415e8acc1b">
+      <element xsi:type="archimate:DataObject" name="Amazon S3" id="id-314acc757baa4c11bfea775409e77baf"/>
+      <element xsi:type="archimate:ApplicationComponent" name="AWS Glue Job" id="id-300f5fa7c4c24231be52f84b693d3dfa"/>
+      <element xsi:type="archimate:ApplicationService" name="AWS Step Functions" id="id-70a73b5301dc491e9b641c3962cb67ab"/>
+    </folder>
+    <folder name="Alternative Draft" id="id-12296d38e09c44aa97f7f244ba0d8220">
+      <element xsi:type="archimate:DataObject" name="Amazon S3" id="id-8b0a333194f04248848c186d08dd2797"/>
+    </folder>
+  </folder>
+  <folder name="Technology &amp; Physical" id="id-687c839d181e4708a7cc34e7136815cf" type="technology">
+    <folder name="Main Draft" id="id-c42c32cdfaca4817ae95db16b5ccd8e2">
+      <element xsi:type="archimate:SystemSoftware" name="Databricks Free Edition" id="id-87a264d77a3443348c64d8a4dd9065fe"/>
+    </folder>
+    <folder name="Alternative Draft" id="id-cd614e2043e944119be4bda3581a5a5a">
+      <element xsi:type="archimate:SystemSoftware" name="Databricks Free Edition" id="id-4dc07e9a9bea4f9ab40aba4da5d13aa4"/>
+    </folder>
+  </folder>
+  <folder name="Motivation" id="id-dbf36e7d8b7a4eefa0221eef39e41f02" type="motivation"/>
+  <folder name="Implementation &amp; Migration" id="id-6001d51aec574ec9bccbdceddfee5a7b" type="implementation_migration"/>
+  <folder name="Other" id="id-e7bdd90c41654c45889390c81c33b399" type="other"/>
+  <folder name="Relations" id="id-705ab3a9e99349fa899a3795a72142e9" type="relations">
+    <folder name="Main Draft" id="id-f10f778cf5b849c182d0d1e2087432c1">
+      <element xsi:type="archimate:AccessRelationship" id="id-f3186bbeb1cc4c88b5954a6523aacda0" source="id-300f5fa7c4c24231be52f84b693d3dfa" target="id-314acc757baa4c11bfea775409e77baf"/>
+      <element xsi:type="archimate:AssociationRelationship" id="id-f5bf008c7b7d4efb8d7e1b802292c751" source="id-87a264d77a3443348c64d8a4dd9065fe" target="id-314acc757baa4c11bfea775409e77baf"/>
+      <element xsi:type="archimate:TriggeringRelationship" id="id-3cba7c430a2942a89c1d3c12b550dc1a" source="id-70a73b5301dc491e9b641c3962cb67ab" target="id-300f5fa7c4c24231be52f84b693d3dfa"/>
+    </folder>
+    <folder name="Alternative Draft" id="id-e23c3d3b3cb840b1b98b914e4c552159">
+      <element xsi:type="archimate:AssociationRelationship" id="id-2a7befa12ccc4a3d8ad764930c3f7261" source="id-8b0a333194f04248848c186d08dd2797" target="id-4dc07e9a9bea4f9ab40aba4da5d13aa4"/>
+    </folder>
+  </folder>
+  <folder name="Views" id="id-3c62b711045447349ddae3a1bd29a7b5" type="diagrams">
+    <folder name="Main Draft" id="id-c1bef835079e44d28a6c884be9d81d5d">
+      <element xsi:type="archimate:ArchimateDiagramModel" name="Container" id="id-d9ed036c0fb346e78e555c54152af399">
+        <child xsi:type="archimate:Group" id="id-a04a49133a36413aa0400790e004e64d" name="AWS Cloud Environment" textAlignment="1">
+          <bounds x="12" y="72" width="469" height="133"/>
+          <child xsi:type="archimate:DiagramObject" id="id-9c515a1702c44096aa3a6c6dfe3bc7b8" targetConnections="id-aedade16bf69469eacee913427a23a2a id-8dfb7bb699a948c797d00fe57de1b46d" archimateElement="id-314acc757baa4c11bfea775409e77baf">
+            <bounds x="324" y="48" width="120" height="55"/>
+            <feature name="imageSource" value="1"/>
+            <feature name="iconVisible" value="1"/>
+          </child>
+          <child xsi:type="archimate:DiagramObject" id="id-26f20f532625466d93c312112f2aebea" targetConnections="id-0432f4567f7347d6a7aad85b64202254" archimateElement="id-300f5fa7c4c24231be52f84b693d3dfa">
+            <bounds x="156" y="48" width="120" height="55"/>
+            <sourceConnection xsi:type="archimate:Connection" id="id-8dfb7bb699a948c797d00fe57de1b46d" source="id-26f20f532625466d93c312112f2aebea" target="id-9c515a1702c44096aa3a6c6dfe3bc7b8" archimateRelationship="id-f3186bbeb1cc4c88b5954a6523aacda0"/>
+          </child>
+          <child xsi:type="archimate:DiagramObject" id="id-858b3a466ee24e7a8533d74fd73a6a8a" archimateElement="id-70a73b5301dc491e9b641c3962cb67ab">
+            <bounds y="48" width="120" height="55"/>
+            <sourceConnection xsi:type="archimate:Connection" id="id-0432f4567f7347d6a7aad85b64202254" source="id-858b3a466ee24e7a8533d74fd73a6a8a" target="id-26f20f532625466d93c312112f2aebea" archimateRelationship="id-3cba7c430a2942a89c1d3c12b550dc1a"/>
+          </child>
+        </child>
+        <child xsi:type="archimate:Group" id="id-bbd433b8f7c44040993000a1abb86d60" name="Databricks Environment" textAlignment="1">
+          <bounds x="492" y="72" width="469" height="136"/>
+          <child xsi:type="archimate:DiagramObject" id="id-f6ea049f483540bf8dee13a69104f44d" archimateElement="id-87a264d77a3443348c64d8a4dd9065fe">
+            <bounds x="84" y="36" width="120" height="55"/>
+            <sourceConnection xsi:type="archimate:Connection" id="id-aedade16bf69469eacee913427a23a2a" source="id-f6ea049f483540bf8dee13a69104f44d" target="id-9c515a1702c44096aa3a6c6dfe3bc7b8" archimateRelationship="id-f5bf008c7b7d4efb8d7e1b802292c751"/>
+          </child>
+        </child>
+      </element>
+    </folder>
+    <folder name="Alternative Draft" id="id-8b7aec84bf6f48d5bd780919d4ba9707">
+      <element xsi:type="archimate:ArchimateDiagramModel" name="Container" id="id-20643b60cd0140a2bfe9f74183262c8a">
+        <child xsi:type="archimate:Group" id="id-98e731f9a1b7493cb603e81acc9e0074" name="AWS Cloud Environment" textAlignment="1">
+          <bounds x="12" y="72" width="469" height="133"/>
+          <child xsi:type="archimate:DiagramObject" id="id-de05ea4d361d4f158a8b0cabadafd29e" archimateElement="id-8b0a333194f04248848c186d08dd2797">
+            <bounds x="156" y="48" width="120" height="55"/>
+            <sourceConnection xsi:type="archimate:Connection" id="id-2127e26f257e432aae1685d9d26c5f69" source="id-de05ea4d361d4f158a8b0cabadafd29e" target="id-512a93d1891e4456a2824319c6845a12" archimateRelationship="id-2a7befa12ccc4a3d8ad764930c3f7261"/>
+          </child>
+        </child>
+        <child xsi:type="archimate:Group" id="id-a2d8c9f380d140fa82e8dc31b4a08634" name="Databricks Environment" textAlignment="1">
+          <bounds x="492" y="72" width="469" height="136"/>
+          <child xsi:type="archimate:DiagramObject" id="id-512a93d1891e4456a2824319c6845a12" targetConnections="id-2127e26f257e432aae1685d9d26c5f69" archimateElement="id-4dc07e9a9bea4f9ab40aba4da5d13aa4">
+            <bounds x="180" y="48" width="120" height="55"/>
+          </child>
+        </child>
+      </element>
+    </folder>
+  </folder>
+</archimate:model>
