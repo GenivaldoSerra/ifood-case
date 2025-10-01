@@ -23,6 +23,8 @@ Aqui você vai encontrar os detalhes de como está estruturado e foi desenvolvid
   - [Camada de Consumo](#cl)
     - [Desenho do ambiente](#layers)
     - [Modelagem de Dados](#der)
+  - [Tagueamento do ambiente](#tags)
+  - [DataOps](#dataops)
 - [Decisões Arquiteturais](#adr)
   - [Definições de Solução](#c4-model)
   - [Registros de Decisão](#registros)
@@ -32,7 +34,7 @@ Aqui você vai encontrar os detalhes de como está estruturado e foi desenvolvid
 
 <strong><a id='objetivo'>[Objetivo](#topicos)</a></strong>
 
-  O **objetivo** é construir um datalake com os dados da Taxi & Limousine Comission (TLC) de Nova York, disponíveis [aqui](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page). Em um primeiro recorte, com o sample de Janeiro a Maio de 2023.
+  O **objetivo** é construir um ambiente de desenvolvimento de um datalake com os dados da Taxi & Limousine Comission (TLC) da cidade de Nova York, disponíveis [aqui](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page). Em um primeiro recorte, com o sample de Janeiro a Maio de 2023.
   
   Para isso, foi definida uma [**arquitetura de referência**](#c4-model) e [**modelagem dos dados**](#der) tornando a disponibilidade e consumo do ambiente analítico escalável e resiliente.
 
@@ -157,13 +159,63 @@ Após execução dos workflows de setup, os jobs abaixo devem aparecer na worksp
 
 Para construção da camada de consumo de dados, execute eles nessa sequência: (Como executar um job Databricks [aqui](https://docs.databricks.com/aws/pt/jobs/run-now#with-different-params))
 
+* **nyc_trip_record_ingestion**: faz a cópia dos dados do TLC NYC, para a camada bruta do bucket S3 dedicado
+  * parâmetros a informar:
+    * car_type:
+      * para mais de um separar nomes por vírgula sem espaços. 
+        * Ex: yellow,green    
+      * valores possíveis:
+        * yellow
+        * green
+        * fhv
+        * fhvhv
+        * all (para buscar dados de todos os tipos)
+    * years
+      * para mais de um separar nomes por vírgula sem espaços. 
+      * Ex: 2023,2024
+    * months:  
+      * para mais de um, seguir o padrão <mês de início>-<mês final>. 
+        * ex: janeiro a maio: 1-5
+
+* **nyc_trip_record_refined_load**: faz a carga dos dados ingeridos na raw para a camada refined, tendo como escopo:
+  * Selecionar colunas necessárias para a camada trusted
+  * Deduplicar os dados
+
+* **nyc_trip_record_trusted_load**: faz a carga dos dados da camada silver para a camada trusted, atualizando a tabela fato, e recriando as dimensões. Detalhes da modelagem dimensional [aqui](#der)
+
+Definiu-se a execução manual dos jobs considerando economia dos recursos em cloud e a idéia de simular ambiente de desenvolvimento com o projeto.
+
+Como débito técnico, a implementação de CDC será construída para as camadas refined e trusted.
+
   ---
 
 # <a id='implementacoes'>[Implementações](#topicos)</a>
 
 <strong><a id='contextualizando'>[Contextualizando](#topicos)</a></strong>
 
+Os dados da origem são arquivos parquet com o registro de corridas mensal das empresas de taxi e serviços de plataforma (Uber, Lift, ...) na cidade de Nova York.
+
+Foi sugestão da solicitante o uso da AWS para storage dos dados processados, e Databricks para construção das camadas de processamento. 
+
+Os requisitos levantados foram: 
+* O período de Janeiro a Maio de 2023 para piloto do ambiente;
+* A disponibilização das colunas abaixo na camada de consumo:
+  * **VendorID**
+  * **passenger_count** 
+  * **total_amount**
+  * **tpep_pickup_datetime** 
+  * **tpep_dropoff_datetime**
+* O direcionamento das seguintes perguntas sobre o negócio:
+  * Qual a média de passageiros (passenger\_count) por cada hora do dia que pegaram táxi no mês de maio considerando todos os táxis da frota?
+  * Qual a média de valor total (total\_amount) recebido em um mês considerando todos os yellow táxis da frota?
+
+O funcionamento do projeto é apresentado abaixo:
+
 <strong><a id='ci'>[Continuous Delivery](#topicos)</a></strong>
+
+O Setup do ambiente foi pensado para automatizar a replicação do ambiente e prova de valor do projeto.
+
+Dois workflows Github Actions compõem o fluxo de entrega:
 
 <strong><a id='bs'>[NYC Bucket Setup](#topicos)</a></strong>
 
@@ -175,6 +227,9 @@ Para construção da camada de consumo de dados, execute eles nessa sequência: 
 
 <strong><a id='der'>[Modelagem de Dados](#topicos)</a></strong>
 
+<strong><a id='tags'>[Tagueamento do ambiente](#topicos)</a></strong>
+
+<strong><a id='dataops'>[DataOps](#topicos)</a></strong>
 
   ---
 
@@ -188,11 +243,6 @@ Para construção da camada de consumo de dados, execute eles nessa sequência: 
   ---
 
 # <a id='next'>[Próximos passos](#topicos)</a>
-
-## **Requisitos:**
-
-
-
 
 
 * Configurar conexão AWS<>Databricks Free Edition 

@@ -1,16 +1,4 @@
 # Databricks notebook source
-# import pandas as pd
-
-# malformed_url_tpl = "https://d37ci6vzurychx.cloudfront.net/trip-data/{TAXI_COLOR}_tripdata_2023-01.parquet"
-# cars = ['yellow', 'green', 'fhv', 'fhvhv']
-# for car in cars:
-#     pandas_df = pd.read_parquet(
-#         malformed_url_tpl.format(TAXI_COLOR=car),
-#         engine="pyarrow"
-#     )
-#     if car == 'fhvhv':
-#         destination_schema = 
-#     spark.createDataFrame(pandas_df).printSchema()
 
 # COMMAND ----------
 
