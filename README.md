@@ -1,4 +1,4 @@
-# Boas vindas ao **ifood-case!**
+# Boas vindas ao **NYC Trip Record!**
 
 Para executar o projeto, observe as orientações descritas a seguir, e se tiver qualquer dúvida, sugestão, contribuição, considere abrir uma issue ou entrar em contato. 🚀
 
