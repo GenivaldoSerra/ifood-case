@@ -277,12 +277,12 @@ A camada raw traz os dados como na origem (as-is), seguindo o schema original do
 A camada refined atualmente só apresenta os dados de taxis (yellow e green taxi) dada a [demanda de negócio](#contextualizando) focada nesses veículos, representados no diagrama abaixo
 
 **Imagem 05 - Diagrama Camada Refined.**
-![refined_layer](docs\images\refined_tables.png)
+![refined_layer](docs/images/refined_tables.png)
 
 Por fim, a camada trusted persiste os dados seguindo o modelo dimensional, apresentado na imagem 06.
 
 **Imagem 06 - Diagrama Camada Trusted.**
-![trusted_layer](docs\images\trusted_tables.png)
+![trusted_layer](docs/images/trusted_tables.png)
 
 Detalhamento das dimensões abaixo:
 
