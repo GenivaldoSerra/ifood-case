@@ -1,6 +1,6 @@
 {
     "name": "nyc_trip_record_ingestion",
-    "description": "* Ingesting raw data from nyc_trip_record.\n* params:\n  * taxi_colors: para mais de um separar nomes por vírgula sem espaços. Ex: yellow,green\n    * valores possíveis:\n      *  yellow\n      *  green\n      *  fhv\n      *  fhvhv\n  * years:  para mais de um separar nomes por vírgula sem espaços. Ex: 2023,2024\n  * months:  para mais de um, seguir o padrão <mês de início>-<mês final>. \n    * ex: janeiro a maio: 1-5)",
+    "description": "* Ingesting raw data from nyc_trip_record.\n* params:\n  * car_type: para mais de um separar nomes por vírgula sem espaços. Ex: yellow,green\n    * valores possíveis:\n      *  yellow\n      *  green\n      *  fhv\n      *  fhvhv\n  * years:  para mais de um separar nomes por vírgula sem espaços. Ex: 2023,2024\n  * months:  para mais de um, seguir o padrão <mês de início>-<mês final>. \n    * ex: janeiro a maio: 1-5)",
     "email_notifications": {
       "no_alert_for_skipped_runs": false
     },
@@ -56,7 +56,7 @@
     },
     "parameters": [
       {
-        "name": "taxi_colors",
+        "name": "car_type",
         "default": "<leia_a_descricao>"
       },
       {
