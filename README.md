@@ -219,13 +219,49 @@ Dois workflows Github Actions compõem o fluxo de entrega:
 
 <strong><a id='bs'>[NYC Bucket Setup](#topicos)</a></strong>
 
+Para [execução do setup do S3](#setup), essa interface do GitHub Actions foi implementada.
+
+**Imagem 01 - Execução de Setup do S3.**
+![nyc_s3_setup](docs/images/nyc_s3_setup.png)
+
 <strong><a id='db'>[Databricks Setup](#topicos)</a></strong>
+
+Para [execução do setup do Databricks](#setup), essa interface do GitHub Actions foi implementada.
+
+**Imagem 02 - Execução de Setup do Databricks.**
+![databricks_setup](docs/images/databricks_setup.png)
 
 <strong><a id='cl'>[Camada de Consumo](#topicos)</a></strong>
 
+A camada de consumo definida foi o Databricks, onde a exploração do código fonte e desenvolvimento à partir do lake é disponibilizada utilizando python, SQL e Spark.
+
+**Imagem 03 - Consumindo camada trusted com Databricks.**
+![consuming_layer](docs/images/consuming_layer.png)
+
 <strong><a id='layers'>[Desenho do ambiente](#topicos)</a></strong>
 
+Buscando o tracking e segregação do consumo dos dados, o processamento dos dados foi definido utilizando as seguintes camadas:
+* Catálogo: nyc_trip_record
+* raw
+* refined
+* trusted
+
+**Imagem 04 - Camadas de processamento no Databricks.**
+![layers](docs/images/layers.png)
+
+Com os diferentes níveis de acurácia, à partir da camada refined é possivel gerar visões de negócio com base nos requisitos levantados.
+
+E a camada trusted traz a consolidação dos dados para criação de produtos de dados e insights refinados sobre as bases
+
 <strong><a id='der'>[Modelagem de Dados](#topicos)</a></strong>
+
+A camada raw traz os dados como na origem (asIs), seguindo o schema original dos dados
+
+A camada refined só apresenta os dados de taxis (yellow e green taxi), representados no diagrama abaixo
+
+**Imagem 04 - Camadas de processamento no Databricks.**
+![layers](docs/images/layers.png)
+
 
 <strong><a id='tags'>[Tagueamento do ambiente](#topicos)</a></strong>
 
