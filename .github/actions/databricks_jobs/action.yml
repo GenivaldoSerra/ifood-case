@@ -1,0 +1,57 @@
+name: "Databricks Jobs Setup"
+description: "Create Jobs in Databricks Workspace"
+
+inputs:
+  databricks_host:
+    description: "User Databricks Host"
+    required: true
+  databricks_token:
+    description: "User Databricks Token"
+    required: true
+  databricks_user_email:
+    description: "User Databricks Email"
+    required: true
+
+
+runs:
+  using: "composite"
+  steps:
+    - name: Configure Databricks jobs JSONs
+      run: |
+        set -e
+        echo "$(date '+%Y-%m-%d %T') [INFO] Iniciando configuração dos arquivos de job..."
+
+        for job in nyc_trip_record_ingestion nyc_trip_record_refined_load nyc_trip_record_trusted_load; do
+          echo "$(date '+%Y-%m-%d %T') [INFO] Configurando arquivo $job.json"
+
+          jq \
+            --arg git_url "https://github.com/${{ github.repository }}" \
+            --arg developer "${{ inputs.databricks_user_email }}" \
+            --arg user_name "${{ inputs.databricks_user_email }}" \
+            '
+            .git_source.git_url = $git_url
+            | .tags.developer = $developer
+            | .run_as.user_name = $user_name
+            ' devops/databricks_jobs/create/$job.json > devops/databricks_jobs/create/${job}_tmp.json
+
+          mv devops/databricks_jobs/create/${job}_tmp.json devops/databricks_jobs/create/$job.json
+        done
+      shell: bash
+
+    # ---- CRIAR JOBS ----
+    - name: Create jobs in Databricks
+      run: |
+        set -e
+        echo "$(date '+%Y-%m-%d %T') [INFO] Iniciando criação dos jobs no Databricks..."
+
+        for job in nyc_trip_record_ingestion nyc_trip_record_refined_load nyc_trip_record_trusted_load; do
+          echo "$(date '+%Y-%m-%d %T') [INFO] Criando job $job no Databricks"
+
+          response=$(curl -s -X POST "${{ inputs.databricks_host }}/api/2.1/jobs/create" \
+            -H "Authorization: Bearer ${{ inputs.databricks_token }}" \
+            -H "Content-Type: application/json" \
+            -d @devops/databricks_jobs/create/$job.json)
+
+          echo "Resposta da API de criação $job: $response"
+        done
+      shell: bash

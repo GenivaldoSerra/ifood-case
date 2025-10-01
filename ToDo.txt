@@ -7,18 +7,18 @@ Criar catálogo ToDo, DEPENDE DE CLOUDFORMATION. VER README OK
 Criar schemas ToDo, DEPENDE DE CLOUDFORMATION. VER README OK
 Criar tabelas externas ToDo, DEPENDE DE CLOUDFORMATION. VER README OK
 
-Ingestão:
+Ingestão: OK
 Criar job de ingestão manualmente OK
   Avaliar refatorar para POO
 
-Refined: 
+Refined:  OK
 Mesma questão de ingestão
 Transformações:
   selecionar colunas necessárias OK
   deduplicar OK
 Salvar no bucket refined OK
 
-Trusted:
+Trusted: OK
 Mesma questão de ingestão
 Fazer modelagem dimensional ?
 	dim_vendor: VendorID, VendorName, taxi_color? (confirmar com dicionário de dados)
@@ -31,7 +31,7 @@ Avaliar:
   Ser materialized view
   Ser view
 
-Versionar jobs
+Versionar jobs OK
   Gerar yaml para asset bundle
   Ou json para API
 
