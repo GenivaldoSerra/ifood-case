@@ -255,11 +255,14 @@ E a camada trusted traz a consolidação dos dados para criação de produtos de
 
 <strong><a id='der'>[Modelagem de Dados](#topicos)</a></strong>
 
-A camada raw traz os dados como na origem (asIs), seguindo o schema original dos dados
+A camada raw traz os dados como na origem (as-is), seguindo o schema original dos dados
 
-A camada refined só apresenta os dados de taxis (yellow e green taxi), representados no diagrama abaixo
+A camada refined atualmente só apresenta os dados de taxis (yellow e green taxi), representados no diagrama abaixo
 
-**Imagem 04 - Camadas de processamento no Databricks.**
+**Imagem 05 - Diagrama Camada Refined.**
+![layers](docs/images/layers.png)
+
+**Imagem 06 - Diagrama Camada Trusted.**
 ![layers](docs/images/layers.png)
 
 
