@@ -52,6 +52,6 @@ runs:
             -H "Content-Type: application/json" \
             -d @devops/databricks_jobs/create/$job.json)
 
-          echo "Resposta da API para $job: $response"
+          echo "Resposta da API de criação $job: $response"
         done
       shell: bash
