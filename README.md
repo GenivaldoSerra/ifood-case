@@ -106,17 +106,16 @@ Aqui você vai encontrar os detalhes de como está estruturado e foi desenvolvid
           * Recomendado:
             * Informar url do repositório que foi feito o fork, na criação da função (role) do OIDC, conforme a referência acima
             * Colocar tags desse projeto;
-            * Especificar branch do repositório que foi feito o fork, na criação da função (role) do OIDC, conforme a referência acima
+            * (OPCIONAL) Especificar branch do repositório que foi feito o fork, na criação da função (role) do OIDC, conforme a referência acima
         * Adicionar `ARN` do Identity Provider criado nas variáveis do repositório criado
           * No seu repositório acesse:
             * Aba `Settings` 
             * Na seção `Security`, clique em `Secrets and variables` 
             *Clique em `Actions` 
-            * Na sequência, clique na aba `Variables` 
-            * Crie uma variável com o nome `NYC_TRIP_RECORD_OIDC_ARN`, com o valor do ARN do Identity Provider criado
-            * Crie uma variável com o nome `NYC_TRIP_RECORD_AWS_REGION` com o valor us-east-2
-          * **IMPORTANTE:** os nomes acima e a criação dessas variáveis é necessário para deploy do S3 que utiliza essas configurações
-          * Role para o Instance Provider com o nome `NycTripRecordOidcRole` 
+            * Na sequência, clique na aba `Secrets` 
+            * Crie uma secret com o nome `NYC_TRIP_RECORD_OIDC_ARN`, com o valor do ARN do Identity Provider criado
+          * **IMPORTANTE:** os nomes acima e a criação da secret é necessário para deploy do S3 que utiliza essas configurações
+            * Role para o Instance Provider com o nome `NycTripRecordOidcRole` 
             > IMPORTANTE: É necessário usar esse nome para funcionamento da criação do S3
         
         ---
