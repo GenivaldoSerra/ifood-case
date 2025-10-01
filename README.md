@@ -28,9 +28,17 @@ Aqui você vai encontrar os detalhes de como está estruturado e foi desenvolvid
 
 <strong><a id='objetivo'>[Objetivo](#topicos)</a></strong>
 
+  O **objetivo** é construir um datalake com os dados da Taxi & Limousine Comission (TLC) de Nova York, disponíveis [aqui](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page). Em um primeiro recorte, com o sample de Janeiro a Maio de 2023.
+  
+  Para isso, foi definida uma [**arquitetura de referência**](#c4-model) e [**modelagem dos dados**](#der) tornando a disponibilidade e consumo do ambiente analítico escalável e resiliente.
+
   ---
 
 <strong><a id='estrutura'>[Estrutura do projeto](#topicos)</a></strong>
+
+* **Na pasta [.github](.github) estão os diretórios:**
+  * **[actions](.github\actions)** com custom actions do `GitHub Actions`, modularizando e desaclopando steps dos workflows de subida dos componentes da arquitetura de referência;
+  * **[workflows](.github\workflows)** com os arquivos de origem dos dados mascarados do controle de cheques atual.
 
 <strong><a id='tecnologias'>[Tecnologias utilizadas](#topicos)</a></strong>
 
