@@ -1,3 +1,67 @@
+# Boas vindas ao **ifood-case!**
+
+Para executar o projeto, observe as orientações descritas a seguir, e se tiver qualquer dúvida, sugestão, contribuição, considere abrir uma issue ou entrar em contato. 🚀
+
+Aqui você vai encontrar os detalhes de como está estruturado e foi desenvolvido o projeto.
+
+# <a id='topicos'>Tópicos</a>
+- [Desenvolvimento](#desenvolvimento)
+  - [Objetivo](#objetivo)
+  - [Estrutura do projeto](#estrutura)
+  - [Tecnologias utilizadas](#tecnologias)
+- [Orientações](#orientacoes)
+  - [Executando o projeto](#execucao)
+- [Implementações](#implementacoes)
+  - [Contextualizando](#contextualizando)
+  - [Continuous Delivery](#ci)
+    - [NYC Bucket Setup](#bs)
+    - [Databricks Setup](#db)
+  - [Camada de Consumo](#cl)
+    - [Desenho do ambiente](#layers)
+    - [Modelagem de Dados](#der)
+- [Decisões Arquiteturais](#adr)
+  - [Definições de Solução](#c4-model)
+  - [Registros de Decisão](#registros)
+- [Próximos passos](#next)
+
+# <a id='desenvolvimento'>[Desenvolvimento](#topicos)</a>
+
+<strong><a id='objetivo'>[Objetivo](#topicos)</a></strong>
+
+  ---
+
+<strong><a id='estrutura'>[Estrutura do projeto](#topicos)</a></strong>
+
+<strong><a id='tecnologias'>[Tecnologias utilizadas](#topicos)</a></strong>
+
+# <a id='orientacoes'>[Orientações](#topicos)</a>
+
+<strong><a id='execucao'>[Executando o projeto](#topicos)</a></strong>
+
+# <a id='implementacoes'>[Implementações](#topicos)</a>
+
+<strong><a id='contextualizando'>[Contextualizando](#topicos)</a></strong>
+
+<strong><a id='ci'>[Continuous Delivery](#topicos)</a></strong>
+
+<strong><a id='bs'>[NYC Bucket Setup](#topicos)</a></strong>
+
+<strong><a id='db'>[Databricks Setup](#topicos)</a></strong>
+
+<strong><a id='cl'>[Camada de Consumo](#topicos)</a></strong>
+
+<strong><a id='layers'>[Desenho do ambiente](#topicos)</a></strong>
+
+<strong><a id='der'>[Modelagem de Dados](#topicos)</a></strong>
+
+# <a id='adr'>[Decisões Arquiteturais](#topicos)</a>
+
+<strong><a id='c4-model'>[Definições de Solução](#topicos)</a></strong>
+
+<strong><a id='registros'>[Registros de Decisão](#topicos)</a></strong>
+
+# <a id='next'>[Próximos passos](#topicos)</a>
+
 ## **Requisitos:**
 * Fazer fork desse projeto
 * Conta AWS
