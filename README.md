@@ -237,15 +237,21 @@ Dois workflows Github Actions compõem o fluxo de entrega:
 
 Para [execução do setup do S3](#setup), essa interface do GitHub Actions foi implementada.
 
-**Imagem 01 - Execução de Setup do S3.**
-![nyc_s3_setup](docs/images/nyc_s3_setup.png)
+**Imagem 01 - Workflow Setup do S3**
+![s3_setup](docs/images/nyc_s3_setup.png)
+
+**Demo 01 - Execução de Setup do S3.**
+![nyc_s3_setup_demo](docs/gifs/nyc_setup.gif)
 
 <strong><a id='db'>[Databricks Setup](#topicos)</a></strong>
 
 Para [execução do setup do Databricks](#setup), essa interface do GitHub Actions foi implementada.
 
-**Imagem 02 - Execução de Setup do Databricks.**
+**Imagem 02 - Workflow Setup do Databricks.**
 ![databricks_setup](docs/images/databricks_setup.png)
+
+**Demo 02 - Execução de Setup do Databricks.**
+![nyc_s3_setup_demo](docs/gifs/databricks_setup.gif)
 
 <strong><a id='cl'>[Camada de Consumo](#topicos)</a></strong>
 
@@ -268,6 +274,15 @@ Buscando o tracking e segregação do consumo dos dados, o processamento dos dad
 Com os diferentes níveis de acurácia, à partir da camada refined é possivel gerar visões de negócio com base nos requisitos levantados.
 
 E a camada trusted traz a consolidação dos dados para criação de produtos de dados e insights refinados sobre as bases
+
+**Demo 03 - Execução job ingestão**
+![ingestion_job_demo](docs/gifs/ingestion_job.gif)
+
+**Demo 04 - Execução job refined**
+![refined_job_demo](docs/gifs/refined_job.gif)
+
+**Demo 05 - Execução job trusted**
+![trusted_job_demo](docs/gifs/trusted_job.gif)
 
 <strong><a id='der'>[Modelagem de Dados](#topicos)</a></strong>
 
