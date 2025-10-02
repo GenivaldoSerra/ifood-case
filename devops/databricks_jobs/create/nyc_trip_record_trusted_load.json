@@ -34,7 +34,7 @@
       "cost_center": "nyc_trip_record",
       "developer": "calilisantos@gmail.com",
       "env": "dev",
-      "resource": "nyc_trip_record_refined_load_job"
+      "resource": "nyc_trip_record_trusted_load_job"
     },
     "queue": {
       "enabled": true

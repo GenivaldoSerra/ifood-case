@@ -14,6 +14,7 @@ Aqui você vai encontrar os detalhes de como está estruturado e foi desenvolvid
     - [Requisitos](#requisitos)
     - [Configurações Necessárias](#settings)
     - [Executando Setup](#setup)
+    - [Configurando External Location](#external)
     - [Executando Jobs Databricks](#jobs)
 - [Implementações](#implementacoes)
   - [Contextualizando](#contextualizando)
@@ -153,7 +154,20 @@ Parâmetros a informar na execução dos workflows:
     * **aws_region**: Com o valor da região a criar o bucket S3
       > IMPORTANTE: Para a versão free do Databricks, usar a região us-east-2 para funcionamento da integração AWS <> Databricks
 
-### <strong><a id='jobs'>[4. Executando Jobs Databricks:](#topicos)</a></strong>
+### <strong><a id='external'>[4. Configurando External Location via Databricks GUI](#topicos)</a></strong>
+
+Para o Databricks Free Edition a criação da external location e storage credential, que permitem a conexão do Databricks com o Bucket S3, só foi possível utilizando o AWS CloudFormation Quickstart.
+
+Siga [esse tutorial](https://docs.databricks.com/aws/en/connect/unity-catalog/cloud-storage/s3/s3-external-location-cfn#step-1-create-an-external-location-for-an-s3-bucket-using-an-aws-cloudformation-template) antes de sequenciar as demais etapas de execução do projeto.
+
+>IMPORTANTE: No setup do AWS Quickstart, utilize essa url como caminho do seu bucket: `s3://nyc-trip-record-ifood/`
+
+>IMPORTANTE: É possível que o nome do bucket usado nesse projeto esteja em uso durante sua execução. Nesse cenário, modifique o nome do bucket utilizado nesses arquivos e na url apresentada anteriormente:
+* nome atual: nyc-trip-record-ifood
+* devops/terraform/_variables.tf
+* src/ingestion/ingestion.py
+
+### <strong><a id='jobs'>[5. Executando Jobs Databricks:](#topicos)</a></strong>
 
 Após execução dos workflows de setup, os jobs abaixo devem aparecer na workspace Databricks informada.
 
@@ -181,6 +195,8 @@ Para construção da camada de consumo de dados, execute eles nessa sequência: 
   * Selecionar colunas necessárias para a camada trusted
   * Deduplicar os dados
 
+* **Reparo da carga de Janeiro de 2023**: Antes de executar a ingestão trusted, faça o reparo previsto [aqui](#dataops).
+
 * **nyc_trip_record_trusted_load**: faz a carga dos dados da camada silver para a camada trusted, atualizando a tabela fato, e recriando as dimensões. Detalhes da modelagem dimensional [aqui](#der)
 
 Definiu-se a execução manual dos jobs considerando economia dos recursos em cloud e a idéia de simular ambiente de desenvolvimento com o projeto.
@@ -205,6 +221,7 @@ Os requisitos levantados foram:
   * **total_amount**
   * **tpep_pickup_datetime** 
   * **tpep_dropoff_datetime**
+
 * O direcionamento das seguintes perguntas sobre o negócio:
   * Qual a média de passageiros (passenger\_count) por cada hora do dia que pegaram táxi no mês de maio considerando todos os táxis da frota?
   * Qual a média de valor total (total\_amount) recebido em um mês considerando todos os yellow táxis da frota?
@@ -257,47 +274,106 @@ E a camada trusted traz a consolidação dos dados para criação de produtos de
 
 A camada raw traz os dados como na origem (as-is), seguindo o schema original dos dados
 
-A camada refined atualmente só apresenta os dados de taxis (yellow e green taxi), representados no diagrama abaixo
+A camada refined atualmente só apresenta os dados de taxis (yellow e green taxi) dada a [demanda de negócio](#contextualizando) focada nesses veículos, representados no diagrama abaixo
 
 **Imagem 05 - Diagrama Camada Refined.**
-![layers](docs/images/layers.png)
+![refined_layer](docs\images\refined_tables.png)
+
+Por fim, a camada trusted persiste os dados seguindo o modelo dimensional, apresentado na imagem 06.
 
 **Imagem 06 - Diagrama Camada Trusted.**
-![layers](docs/images/layers.png)
+![trusted_layer](docs\images\trusted_tables.png)
+
+Detalhamento das dimensões abaixo:
+
+### Tabela dim_trip_time:
+|Coluna|Tipo|Descrição|
+|-|-|-|
+|trip_time_id|STRING|Surrougate Key concatenando pickup_datetime e dropoff_datetime|
+|pickup_datetime|TIMESTAMP|Timestamp do começo da corrida. Concentrando tpep_pickup_datetime e lpep_pickup_datetime dos dados brutos|
+|pickup_month|INTEGER|Mês do começo da corrida|
+|pickup_hour|INTEGER|Hora do começo da corrida|
+|dropoff_datetime|TIMESTAMP|Timestamp do fim da corrida. Concentrando tpep_dropoff_datetime e lpep_dropoff_datetime dos dados brutos|
+|dropoff_month|INTEGER|Mês do fim da corrida|
+|dropoff_hour|INTEGER|Hora do fim da corrida|
+### Tabela dim_vendor:
+|Coluna|Tipo|Descrição|
+|-|-|-|
+|vendor_id|STRING|Surrougate Key concatenando vendor_code, vendor_name e car_type|
+|vendor_code|BIGINT|VendorID dos dados brutos|
+|vendor_name|STRING|Nome do vendo com base no dicionário de dados|
+|car_type|STRING|Tipo do carro (yellow, green, fhv, fhvhv)|
+### Tabela fact_trip:
+|Coluna|Tipo|Descrição|
+|-|-|-|
+|fact_id|STRING|Surrougate Key concatenando vendor_id, pickup_datetime, dropoff_datetime, total_amount e passenger_count|
+|vendor_id|STRING|da dim_vendor|
+|trip_time_id|STRING|da dim_trip_time|
+|passenger_count|LONG|Quantidade de passageiros da corrida|
+|total_amount|DOUBLE|Valor pago por corrida|
 
 
 <strong><a id='tags'>[Tagueamento do ambiente](#topicos)</a></strong>
 
+Buscando a governança e monitoria do ambiente, os recursos provisionados nascem com as seguintes tags:
+
+* component: setup | data_integration
+* cost_center: nyc_trip_record
+* developer: calilisantos@gmail.com
+* env: dev
+* resource: 
+    nyc_trip_record_oidc
+    nyc_trip_record_oidc_role
+    nyc_trip_record_bucket
+    nyc_trip_record_ingestion_job
+    nyc_trip_record_refined_load_job
+    nyc_trip_record_trusted_load_job
+
 <strong><a id='dataops'>[DataOps](#topicos)</a></strong>
+
+Para consolidar as operações do ambiente analítico, foi feita uma camada staging no bucket, nesse primeiro momento para reparo da ingestão dos arquivos de Janeiro de 2023 da base de dados que apresentava inconsistência de schema.
+
+O código de reparo está presente [aqui](src\dataops\fix_load.py), com a subida feita de forma manual dos arquivos desse período para os taxis green e yellow, com sua carga feita diretamente para a camada refined.
 
   ---
 
 # <a id='adr'>[Decisões Arquiteturais](#topicos)</a>
 
-<strong><a id='c4-model'>[Definições de Solução](#topicos)</a></strong>
+<strong><a id='c4-model'>[EM CONSTRUÇÃO - Definições de Solução](#topicos)</a></strong>
+
+Para definições de arquitetura, escolheu-se o C4-Model como referência de modelagem da solução, e a utilização de registros de arquitetura (ADR) para gestão do conhecimento, utilizando o template MADR. 
 
 <strong><a id='registros'>[Registros de Decisão](#topicos)</a></strong>
 
+* Arquitetura de Referência
+  * Inicialmente levantou-se como cenário ideal segregar ingestão e processamento dos dados do Databricks, segregando responsabilidades e aproveitando features nativas da cloud para aquisição de dados com algumas soluções levantadas (ver esboços [aqui](docs\drafts.excalidraw) e [aqui](docs\project.archimate))
+    * Ingestão: 
+      * AWS Lambda + EventBridge
+      * AWS Step Functions + Glue Job
+      * AWS EC2 com Airflow
+      * Airflow Gerenciado da AWS (MWAA)
+  * Com as limitações de configurar o ambiente Databricks Free Edition, e baixa volumetria do sample estabelecido inicialmente, foi definido o uso do boto3 junto com o Databricks para aquisição de dados, decisão a ser reconsiderada em ambiente produtivo e evolução do projeto
+* Configurar conexão AWS<>Databricks Free Edition 
+  * Limitações: Instance profile precisa de databricks provisionado na AWS: https://docs.databricks.com/aws/pt/connect/storage/tutorial-s3-instance-profile
+  * Storage credential e external location tem restrições tambem. Criação delas foi feita com sucesso através do AWS Quickstart (que utiliza CloudFormation)
+  * Decisão: criar access_key e access_secret_key no Console AWS e colocar em secrets github
+* Feature de Documentação das tabelas com DBRX (Hub de Agentes do Databricks):
+  * Acesso de construção do modelo não é permitida com Databricks Free Edition, postergando feature no momento
 
   ---
 
 # <a id='next'>[Próximos passos](#topicos)</a>
 
-
-* Configurar conexão AWS<>Databricks Free Edition 
-  * Limitações (para ADR): Instance profile precisa de databricks provisionado na AWS: https://docs.databricks.com/aws/pt/connect/storage/tutorial-s3-instance-profile
-  * Storage credential e external location tem restrições tambem. Criação delas foi feita com sucesso através do AWS Quickstart (que utiliza CloudFormation)
-  * Decisão: criar access_key e access_secret_key no Console AWS e colocar em secrets github
-
-
-* Configurar ingestão
-  * Documentar CloudFormation
-  * Execução dos jobs de ingestão
-
-* Decisão:
-  Tirar período Janeiro-2023 da raw, dada inconsistência dos dados
-
+* Rever débitos técnicos:
+  * Construção de estratégia de CDC
+    * Tabela de parâmetros, tornando ingestões dinâmicas (flag para ingerir ou não)
+  * Acoplamento de ingestão e transformação no Databricks
 * Evoluções:
-  * Tabela de parâmetros, tornando ingestões dinâmicas (flag para ingerir ou não)
+  * Construção de solução de Data Quality para lidar com inconsistências dos dados
+    * Schema dos campos (passenger_count como double em Janeiro de 2023)
+    * Dados out-of-sample (2002, 2008, 2014, etc...)
+    * Outliers dos valores
+  * Utilizar dicionário de dados da origem para documentação das tabelas
   * Testes de integração, unitários
-  * Estratégia SCD 
+  * Modularizar código com strategy e factory patterns
+  

@@ -46,10 +46,14 @@ for taxi in car_type:
 if not years or years[0] > years[-1]:
     logger.error(years_error_log)
     raise Exception(years_error_log)
-if not months or months[0] > months[1]:
+if not months or months[0] > months[-1]:
     logger.error(month_error_log)
     raise Exception(month_error_log)
-months_adjusted = [("0"+ str(month)) if month < 10 else str(month) for month in range(months[0], months[1]+1)]
+if len(months) > 1:
+    months_adjusted = [("0"+ str(month)) if month < 10 else str(month) for month in range(months[0], months[1]+1)]
+else:
+    months_adjusted = [("0"+ str(months[0])) if months[0] < 10 else str(months[0])]
+
 logger.info(f"Baixando arquivos para: {car_type}, {years}, {months_adjusted}")
 
 url_tpl = "https://d37ci6vzurychx.cloudfront.net/trip-data/{CAR_TYPE}_tripdata_{YEAR}-{MONTH}.parquet"
