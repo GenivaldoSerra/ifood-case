@@ -53,7 +53,7 @@
 # MAGIC   _rescued_data VARCHAR(200)
 # MAGIC )
 # MAGIC USING PARQUET
-# MAGIC LOCATION 's3://nyc-trip-record-ifood/raw/yellow/'
+# MAGIC LOCATION 's3://nyc-trip-record-ifood-gen/raw/yellow/'
 
 # COMMAND ----------
 
@@ -84,7 +84,7 @@
 # MAGIC   _rescued_data VARCHAR(200)
 # MAGIC )
 # MAGIC USING PARQUET
-# MAGIC LOCATION 's3://nyc-trip-record-ifood/raw/green/'
+# MAGIC LOCATION 's3://nyc-trip-record-ifood-gen/raw/green/'
 
 # COMMAND ----------
 
@@ -101,7 +101,7 @@
 # MAGIC   _rescued_data VARCHAR(200)
 # MAGIC )
 # MAGIC USING PARQUET
-# MAGIC LOCATION 's3://nyc-trip-record-ifood/raw/fhv/'
+# MAGIC LOCATION 's3://nyc-trip-record-ifood-gen/raw/fhv/'
 # MAGIC COMMENT "For Hire Vehicles records"
 
 # COMMAND ----------
@@ -137,7 +137,7 @@
 # MAGIC   _rescued_data VARCHAR(200)
 # MAGIC )
 # MAGIC USING PARQUET
-# MAGIC LOCATION 's3://nyc-trip-record-ifood/raw/fhvhv/'
+# MAGIC LOCATION 's3://nyc-trip-record-ifood-gen/raw/fhvhv/'
 # MAGIC COMMENT "High Volume For Hire Vehicles records"
 
 # COMMAND ----------
@@ -157,7 +157,7 @@
 # MAGIC   tpep_dropoff_datetime TIMESTAMP
 # MAGIC )
 # MAGIC USING DELTA
-# MAGIC LOCATION 's3://nyc-trip-record-ifood/refined/yellow/'
+# MAGIC LOCATION 's3://nyc-trip-record-ifood-gen/refined/yellow/'
 
 # COMMAND ----------
 
@@ -171,21 +171,21 @@
 # MAGIC   lpep_dropoff_datetime TIMESTAMP
 # MAGIC )
 # MAGIC USING DELTA
-# MAGIC LOCATION 's3://nyc-trip-record-ifood/refined/green/'
+# MAGIC LOCATION 's3://nyc-trip-record-ifood-gen/refined/green/'
 
 # COMMAND ----------
 
 # MAGIC %sql 
 # MAGIC CREATE TABLE IF NOT EXISTS nyc_trip_record.refined.fhv
 # MAGIC USING DELTA
-# MAGIC LOCATION 's3://nyc-trip-record-ifood/refined/fhv/'
+# MAGIC LOCATION 's3://nyc-trip-record-ifood-gen/refined/fhv/'
 
 # COMMAND ----------
 
 # MAGIC %sql 
 # MAGIC CREATE TABLE IF NOT EXISTS nyc_trip_record.refined.fhvhv
 # MAGIC USING DELTA
-# MAGIC LOCATION 's3://nyc-trip-record-ifood/refined/fhvhv/'
+# MAGIC LOCATION 's3://nyc-trip-record-ifood-gen/refined/fhvhv/'
 
 # COMMAND ----------
 
@@ -203,7 +203,7 @@
 # MAGIC   car_type STRING
 # MAGIC )
 # MAGIC USING DELTA
-# MAGIC LOCATION 's3://nyc-trip-record-ifood/trusted/dim_vendor/'
+# MAGIC LOCATION 's3://nyc-trip-record-ifood-gen/trusted/dim_vendor/'
 
 # COMMAND ----------
 
@@ -219,7 +219,7 @@
 # MAGIC   dropoff_hour INTEGER
 # MAGIC )
 # MAGIC USING DELTA
-# MAGIC LOCATION 's3://nyc-trip-record-ifood/trusted/dim_trip_time/'
+# MAGIC LOCATION 's3://nyc-trip-record-ifood-gen/trusted/dim_trip_time/'
 
 # COMMAND ----------
 
@@ -233,4 +233,4 @@
 # MAGIC   total_amount DOUBLE
 # MAGIC )
 # MAGIC USING DELTA
-# MAGIC LOCATION 's3://nyc-trip-record-ifood/trusted/fact_trip/'
+# MAGIC LOCATION 's3://nyc-trip-record-ifood-gen/trusted/fact_trip/'
