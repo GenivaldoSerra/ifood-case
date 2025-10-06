@@ -5,7 +5,7 @@ variable "bucket_folders" {
 
 variable "bucket_name" {
   type    = string
-  default = "nyc-trip-record-ifood"
+  default = "nyc-trip-record-ifood-gen"
 }
 
 variable "env" {

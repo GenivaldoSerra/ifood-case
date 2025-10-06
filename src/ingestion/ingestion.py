@@ -25,7 +25,7 @@ s3_client = boto3.client(
     aws_secret_access_key=dbutils.secrets.get(scope="nyc-trip-record", key="aws-secret-key")
 )
 
-bucket_name = "nyc-trip-record-ifood"
+bucket_name = "nyc-trip-record-ifood-gen"
 valid_car_types = ["yellow", "green", "fhv", "fhvhv"]
 car_type = valid_car_types if dbutils.widgets.get("car_type") == "all" else dbutils.widgets.get("car_type").split(",")
 years = list(map(int, dbutils.widgets.get("years").split(",")))
